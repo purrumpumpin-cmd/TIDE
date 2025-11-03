@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { Menu, Power, Folder, MessageSquare, DollarSign, Package, Music, BookOpen, Mail, HelpCircle, Settings, Info, Sparkles, Zap } from "lucide-react";
+import { Menu, Power, Folder, MessageSquare, DollarSign, Package, Music, BookOpen, Mail, HelpCircle, Settings, Info, Sparkles, Zap, Gamepad2, Bot } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { WindowFrame } from "./WindowFrame";
 import { WalletConnectButton } from "./WalletConnectButton";
@@ -19,6 +19,8 @@ import { WaitlistApp } from "./apps/WaitlistApp";
 import { HelpApp } from "./apps/HelpApp";
 import { SettingsApp } from "./apps/SettingsApp";
 import { GenesisApp } from "./apps/GenesisApp";
+import { ArcadeApp } from "./apps/ArcadeApp";
+import { AIPetsApp } from "./apps/AIPetsApp";
 import { authApi } from "../utils/api";
 
 interface App {
@@ -116,6 +118,22 @@ const APPS: App[] = [
     component: RazaAzarPortalApp,
     initialX: 290,
     initialY: 210,
+  },
+  {
+    id: "arcade",
+    name: "ARCADE.EXE",
+    icon: <Gamepad2 size={32} />,
+    component: ArcadeApp,
+    initialX: 320,
+    initialY: 230,
+  },
+  {
+    id: "aipets",
+    name: "AI.PETS",
+    icon: <Bot size={32} />,
+    component: AIPetsApp,
+    initialX: 350,
+    initialY: 250,
   },
   {
     id: "genesis",

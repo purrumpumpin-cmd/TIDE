@@ -1,473 +1,467 @@
 /**
- * TIDElabs - MSN.CHAT
- * El Messenger Pirata con BeatBunny y UngaBunga
+ * TIDElabs - MSN.CHAT Pirata
+ * El Messenger de los NAKAMAS con funcionalidad en tiempo real
  */
 
 import { useState, useEffect, useRef } from "react";
-import { Send, Smile, Phone, Video, Settings, X, Minus, Maximize2, User, Circle } from "lucide-react";
+import { Send, Smile, Zap, User, Circle, Anchor, Compass, Skull, Crown, Ship, Waves } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { supabase } from "../../utils/supabase/client";
+import { pointsApi } from "../../utils/api";
 
-interface Contact {
+interface NakamaUser {
   id: string;
-  name: string;
-  status: "online" | "away" | "busy" | "offline";
-  avatar: string;
-  personalMessage: string;
-  isAgent?: boolean;
-  agentType?: "beatbunny" | "ungabunga";
+  wallet_address: string;
+  username: string;
+  status: string;
+  status_message?: string;
+  last_seen: string;
+  is_online: boolean;
 }
 
-interface Message {
+interface ChatMessage {
   id: string;
-  contactId: string;
-  text: string;
-  timestamp: Date;
-  sender: "me" | "them";
-  emoji?: string;
+  sender_wallet: string;
+  sender_username: string;
+  message: string;
+  message_type: 'text' | 'buzz';
+  created_at: string;
 }
 
-interface ChatWindow {
-  contactId: string;
-  isMinimized: boolean;
-}
-
-const EMOTICONS = [
-  { code: ":)", emoji: "😊" },
-  { code: ":(", emoji: "😢" },
-  { code: ":D", emoji: "😁" },
-  { code: ";)", emoji: "😉" },
-  { code: ":P", emoji: "😛" },
-  { code: "(H)", emoji: "😎" },
-  { code: "(Y)", emoji: "👍" },
-  { code: "(N)", emoji: "👎" },
-  { code: "<3", emoji: "❤️" },
-  { code: "(music)", emoji: "🎵" },
-];
-
-const CONTACTS: Contact[] = [
-  {
-    id: "beatbunny",
-    name: "BeatBunny",
-    status: "online",
-    avatar: "🐰",
-    personalMessage: "🎵 Dropping beats & vibes! Let's vibe together! 🎧",
-    isAgent: true,
-    agentType: "beatbunny",
-  },
-  {
-    id: "ungabunga",
-    name: "UngaBunga",
-    status: "online",
-    avatar: "🦍",
-    personalMessage: "UNGA BUNGA! 🍌 Me help you navigate jungle! 🌴",
-    isAgent: true,
-    agentType: "ungabunga",
-  },
-  {
-    id: "nakama1",
-    name: "CryptoNakama",
-    status: "online",
-    avatar: "👤",
-    personalMessage: "Hodling to the moon! 🚀",
-  },
-  {
-    id: "nakama2",
-    name: "PirateInvestor",
-    status: "away",
-    avatar: "🏴‍☠️",
-    personalMessage: "Navigating the Web3 seas...",
-  },
+const PIRATE_STATUSES = [
+  { id: 'En el Galeón', label: 'En el Galeón', icon: <Ship size={16} />, color: 'text-green-500' },
+  { id: 'Izando la Bandera', label: 'Izando la Bandera', icon: <Crown size={16} />, color: 'text-yellow-500' },
+  { id: 'Navegando', label: 'Navegando', icon: <Compass size={16} />, color: 'text-blue-500' },
+  { id: 'Buscando Tesoro', label: 'Buscando Tesoro', icon: <Skull size={16} />, color: 'text-purple-500' },
+  { id: 'En la Taberna', label: 'En la Taberna', icon: <Anchor size={16} />, color: 'text-orange-500' },
+  { id: 'Perdido en el Mar', label: 'Perdido en el Mar', icon: <Waves size={16} />, color: 'text-gray-500' },
 ];
 
 export function MSNChatApp() {
-  const [contacts] = useState<Contact[]>(CONTACTS);
-  const [myStatus, setMyStatus] = useState<"online" | "away" | "busy">("online");
-  const [myPersonalMessage, setMyPersonalMessage] = useState("¡Navegando el Galeón Digital!");
-  const [openChats, setOpenChats] = useState<ChatWindow[]>([]);
-  const [messages, setMessages] = useState<Record<string, Message[]>>({});
-  const [inputTexts, setInputTexts] = useState<Record<string, string>>({});
-  const [showEmoticons, setShowEmoticons] = useState<string | null>(null);
-  const [editingStatus, setEditingStatus] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [nakamas, setNakamas] = useState<NakamaUser[]>([]);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [currentStatus, setCurrentStatus] = useState('En el Galeón');
+  const [statusMessage, setStatusMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [walletAddress] = useState<string | null>(localStorage.getItem('tidelabs_wallet'));
+  const [username, setUsername] = useState<string>('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const openChat = (contactId: string) => {
-    if (!openChats.find((c) => c.contactId === contactId)) {
-      setOpenChats([...openChats, { contactId, isMinimized: false }]);
+  useEffect(() => {
+    if (walletAddress) {
+      initializeChat();
+      subscribeToMessages();
+      subscribeToNakamaStatus();
+    }
+  }, [walletAddress]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const initializeChat = async () => {
+    if (!walletAddress) return;
+
+    try {
+      setLoading(true);
       
-      // Mensaje de bienvenida del agente
-      const contact = contacts.find((c) => c.id === contactId);
-      if (contact?.isAgent) {
-        setTimeout(() => {
-          addAgentWelcomeMessage(contactId, contact.agentType!);
-        }, 500);
+      // Get or create user profile
+      const { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('wallet_address', walletAddress)
+        .single();
+
+      if (profileError && profileError.code !== 'PGRST116') {
+        throw profileError;
       }
+
+      const userUsername = profile?.username || `NAKAMA-${walletAddress.slice(-6).toUpperCase()}`;
+      setUsername(userUsername);
+
+      // Update or create NAKAMA status
+      await supabase
+        .from('nakama_status')
+        .upsert({
+          wallet_address: walletAddress,
+          username: userUsername,
+          status: currentStatus,
+          status_message: statusMessage,
+          is_online: true,
+          last_seen: new Date().toISOString(),
+        });
+
+      // Load recent messages
+      const { data: messagesData, error: messagesError } = await supabase
+        .from('nakama_messages')
+        .select('*')
+        .order('created_at', { ascending: true })
+        .limit(50);
+
+      if (messagesError) throw messagesError;
+      setMessages(messagesData || []);
+
+      // Load online NAKAMAs
+      const { data: nakamasData, error: nakamasError } = await supabase
+        .from('nakama_status')
+        .select('*')
+        .eq('is_online', true)
+        .order('last_seen', { ascending: false });
+
+      if (nakamasError) throw nakamasError;
+      setNakamas(nakamasData || []);
+
+    } catch (error) {
+      console.error('Error initializing chat:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const closeChat = (contactId: string) => {
-    setOpenChats(openChats.filter((c) => c.contactId !== contactId));
-  };
-
-  const toggleMinimize = (contactId: string) => {
-    setOpenChats(
-      openChats.map((c) =>
-        c.contactId === contactId ? { ...c, isMinimized: !c.isMinimized } : c
+  const subscribeToMessages = () => {
+    const channel = supabase
+      .channel('nakama_messages')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'nakama_messages',
+        },
+        (payload) => {
+          const newMessage = payload.new as ChatMessage;
+          setMessages(prev => [...prev, newMessage]);
+          
+          // Buzz effect for buzz messages
+          if (newMessage.message_type === 'buzz' && newMessage.sender_wallet !== walletAddress) {
+            triggerBuzzEffect();
+          }
+        }
       )
-    );
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   };
 
-  const addAgentWelcomeMessage = (contactId: string, agentType: "beatbunny" | "ungabunga") => {
-    const welcomeMessages = {
-      beatbunny: [
-        "Yo yo yo! 🎵 BeatBunny in the house! What's good, fam?",
-        "Ready to vibe with some sick TUNOVA tracks? 🎧",
-        "I got the freshest beats from our ecosystem! Wanna hear something dope? 🔥",
-      ],
-      ungabunga: [
-        "UNGA BUNGA! 🦍 UngaBunga say hello!",
-        "You need help? UngaBunga smart monkey! Me know all about TIDElabs! 🌴",
-        "Want banana wisdom? 🍌 Me tell you secrets of ecosystem!",
-      ],
+  const subscribeToNakamaStatus = () => {
+    const channel = supabase
+      .channel('nakama_status')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'nakama_status',
+        },
+        async () => {
+          // Reload NAKAMAs list
+          const { data: nakamasData } = await supabase
+            .from('nakama_status')
+            .select('*')
+            .eq('is_online', true)
+            .order('last_seen', { ascending: false });
+
+          setNakamas(nakamasData || []);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
     };
-
-    const messages = welcomeMessages[agentType];
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-
-    addMessage(contactId, randomMessage, "them");
   };
 
-  const addMessage = (contactId: string, text: string, sender: "me" | "them", emoji?: string) => {
-    const newMessage: Message = {
-      id: Date.now().toString() + Math.random(),
-      contactId,
-      text,
-      timestamp: new Date(),
-      sender,
-      emoji,
-    };
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentMessage.trim() || !walletAddress || !username) return;
 
-    setMessages((prev) => ({
-      ...prev,
-      [contactId]: [...(prev[contactId] || []), newMessage],
-    }));
+    try {
+      const { error } = await supabase
+        .from('nakama_messages')
+        .insert({
+          sender_wallet: walletAddress,
+          sender_username: username,
+          message: currentMessage.trim(),
+          message_type: 'text',
+        });
 
-    // Respuesta automática del agente
-    if (sender === "me") {
-      const contact = contacts.find((c) => c.id === contactId);
-      if (contact?.isAgent) {
-        setTimeout(() => {
-          generateAgentResponse(contactId, contact.agentType!, text);
-        }, 1000 + Math.random() * 2000);
+      if (error) throw error;
+
+      // Add points for chat message
+      try {
+        await pointsApi.addPoints(walletAddress, 0, 'chat_message');
+      } catch (pointsError) {
+        console.error('Error adding points:', pointsError);
       }
+
+      setCurrentMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
     }
   };
 
-  const generateAgentResponse = (contactId: string, agentType: "beatbunny" | "ungabunga", userMessage: string) => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    const responses = {
-      beatbunny: {
-        greetings: ["Yo! What's up? 🎵", "Hey hey! Ready to jam? 🎧", "Wassup! Let's vibe! 🔥"],
-        music: ["Check out our TUNOVA radio! We got fire tracks! 🎵", "Our artists are SICK! You gotta hear them! 🎧", "Music is life, bro! Let me put you on to some heat! 🔥"],
-        help: ["Need help? I gotchu fam! What you wanna know? 😎", "Ask me anything about music or the ecosystem! 🎵", "I'm here to help, let's figure this out together! 💪"],
-        default: ["That's dope! 🔥", "For real? Tell me more! 🎵", "Yo that's interesting! 😎", "Keep the vibes coming! 🎧"],
-      },
-      ungabunga: {
-        greetings: ["UNGA! Hello friend! 🦍", "BUNGA! UngaBunga happy see you! 🍌", "UNGA BUNGA! *beats chest* 💪"],
-        help: ["UngaBunga help! What you need? 🌴", "Me smart monkey! Me explain! 🦍", "UngaBunga know much! Ask me! 🍌"],
-        crowdfund: ["CROWDFUND good! You invest, you get banana! 🍌", "UngaBunga say: invest now, rich later! 💰", "Smart human invest in TIDElabs! UNGA! 🚀"],
-        default: ["UNGA BUNGA! 🦍", "Me understand! *nods* 🍌", "BUNGA! That good! 👍", "UngaBunga think you smart! 🌴"],
-      },
-    };
+  const sendBuzz = async () => {
+    if (!walletAddress || !username) return;
 
-    let response = "";
-    const agentResponses = responses[agentType];
+    try {
+      const { error } = await supabase
+        .from('nakama_messages')
+        .insert({
+          sender_wallet: walletAddress,
+          sender_username: username,
+          message: '¡ZUMBIDO!',
+          message_type: 'buzz',
+        });
 
-    if (lowerMessage.includes("hi") || lowerMessage.includes("hello") || lowerMessage.includes("hola")) {
-      response = agentResponses.greetings[Math.floor(Math.random() * agentResponses.greetings.length)];
-    } else if (agentType === "beatbunny" && (lowerMessage.includes("music") || lowerMessage.includes("song") || lowerMessage.includes("track"))) {
-      response = agentResponses.music![Math.floor(Math.random() * agentResponses.music!.length)];
-    } else if (lowerMessage.includes("help") || lowerMessage.includes("ayuda")) {
-      response = agentResponses.help[Math.floor(Math.random() * agentResponses.help.length)];
-    } else if (agentType === "ungabunga" && (lowerMessage.includes("crowdfund") || lowerMessage.includes("invest"))) {
-      response = agentResponses.crowdfund![Math.floor(Math.random() * agentResponses.crowdfund!.length)];
-    } else {
-      response = agentResponses.default[Math.floor(Math.random() * agentResponses.default.length)];
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error sending buzz:', error);
     }
-
-    addMessage(contactId, response, "them");
   };
 
-  const sendMessage = (contactId: string) => {
-    const text = inputTexts[contactId]?.trim();
-    if (!text) return;
+  const updateStatus = async (newStatus: string) => {
+    if (!walletAddress || !username) return;
 
-    // Convertir emoticones
-    let processedText = text;
-    EMOTICONS.forEach((emoticon) => {
-      processedText = processedText.replace(new RegExp(emoticon.code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), emoticon.emoji);
+    try {
+      setCurrentStatus(newStatus);
+      
+      const { error } = await supabase
+        .from('nakama_status')
+        .update({
+          status: newStatus,
+          status_message: statusMessage,
+          last_seen: new Date().toISOString(),
+        })
+        .eq('wallet_address', walletAddress);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+
+  const triggerBuzzEffect = () => {
+    // Visual buzz effect
+    const chatWindow = document.querySelector('.msn-chat-window');
+    if (chatWindow) {
+      chatWindow.classList.add('animate-pulse');
+      setTimeout(() => {
+        chatWindow.classList.remove('animate-pulse');
+      }, 1000);
+    }
+
+    // Audio buzz effect
+    try {
+      const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT');
+      audio.play().catch(() => {
+        // Fallback if audio fails
+        console.log('Buzz effect triggered!');
+      });
+    } catch (error) {
+      console.log('Buzz effect triggered!');
+    }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const getStatusInfo = (status: string) => {
+    return PIRATE_STATUSES.find(s => s.id === status) || PIRATE_STATUSES[0];
+  };
+
+  const formatTime = (timestamp: string) => {
+    return new Date(timestamp).toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit'
     });
-
-    addMessage(contactId, processedText, "me");
-    setInputTexts({ ...inputTexts, [contactId]: "" });
-    setShowEmoticons(null);
   };
 
-  const insertEmoticon = (contactId: string, emoji: string) => {
-    const currentText = inputTexts[contactId] || "";
-    setInputTexts({ ...inputTexts, [contactId]: currentText + emoji });
-    setShowEmoticons(null);
-  };
+  if (!walletAddress) {
+    return (
+      <div className="h-full flex flex-col bg-white font-win95">
+        <div className="bg-[var(--color-win95-titlebar)] text-white p-4 win95-bevel-out">
+          <h2 className="font-brutalist tracking-wider">MSN.CHAT</h2>
+          <p className="text-xs mt-1">El Messenger Pirata</p>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <User size={64} className="mx-auto mb-4 opacity-50" />
+            <p className="font-brutalist mb-2">Conecta tu wallet para unirte al chat</p>
+            <p className="text-sm text-[var(--color-raza-gray)]">
+              Chatea con otros NAKAMAS en tiempo real
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "online": return "#7FBA00";
-      case "away": return "#FFB900";
-      case "busy": return "#E81123";
-      case "offline": return "#7A7A7A";
-      default: return "#7A7A7A";
-    }
-  };
+  if (loading) {
+    return (
+      <div className="h-full flex flex-col bg-white font-win95">
+        <div className="bg-[var(--color-win95-titlebar)] text-white p-4 win95-bevel-out">
+          <h2 className="font-brutalist tracking-wider">MSN.CHAT</h2>
+          <p className="text-xs mt-1">El Messenger Pirata</p>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-pulse">Conectando al chat...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full flex bg-white font-win95">
-      {/* Contact List Panel */}
-      <div className="w-64 border-r-2 border-[var(--color-raza-gray)] flex flex-col">
+    <div className="h-full flex bg-white font-win95 msn-chat-window">
+      {/* Sidebar - NAKAMAs List */}
+      <div className="w-64 border-r-2 border-[var(--color-win95-shadow)] flex flex-col">
         {/* Header */}
-        <div className="p-3 bg-gradient-to-r from-[#0078D4] to-[#50E6FF] text-white">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl">
-              🏴‍☠️
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1">
-                <Circle size={8} fill={getStatusColor(myStatus)} stroke="none" />
-                <span className="text-sm truncate">TIDElabs Nakama</span>
-              </div>
-              {editingStatus ? (
-                <input
-                  type="text"
-                  value={myPersonalMessage}
-                  onChange={(e) => setMyPersonalMessage(e.target.value)}
-                  onBlur={() => setEditingStatus(false)}
-                  onKeyDown={(e) => e.key === "Enter" && setEditingStatus(false)}
-                  className="text-xs bg-white/20 px-1 rounded w-full text-white"
-                  autoFocus
-                />
-              ) : (
-                <p
-                  className="text-xs truncate cursor-pointer hover:underline"
-                  onClick={() => setEditingStatus(true)}
-                >
-                  {myPersonalMessage}
-                </p>
-              )}
-            </div>
+        <div className="bg-[var(--color-win95-titlebar)] text-white p-3 win95-bevel-out">
+          <h3 className="font-brutalist text-sm">NAKAMAS ONLINE</h3>
+          <p className="text-xs opacity-75">{nakamas.length} conectados</p>
+        </div>
+
+        {/* Status Selector */}
+        <div className="win95-bevel-in bg-[var(--color-win95-face)] p-3 border-b">
+          <div className="mb-2">
+            <label className="text-xs font-brutalist">MI ESTADO:</label>
+            <select
+              value={currentStatus}
+              onChange={(e) => updateStatus(e.target.value)}
+              className="w-full win95-bevel-in p-1 text-xs mt-1"
+            >
+              {PIRATE_STATUSES.map(status => (
+                <option key={status.id} value={status.id}>
+                  {status.label}
+                </option>
+              ))}
+            </select>
           </div>
-          
-          {/* Status Selector */}
-          <div className="flex gap-1 mt-2">
-            <button
-              onClick={() => setMyStatus("online")}
-              className={`flex-1 px-2 py-1 rounded text-xs ${myStatus === "online" ? "bg-white/30" : "bg-white/10 hover:bg-white/20"}`}
-            >
-              Disponible
-            </button>
-            <button
-              onClick={() => setMyStatus("away")}
-              className={`flex-1 px-2 py-1 rounded text-xs ${myStatus === "away" ? "bg-white/30" : "bg-white/10 hover:bg-white/20"}`}
-            >
-              Ausente
-            </button>
-            <button
-              onClick={() => setMyStatus("busy")}
-              className={`flex-1 px-2 py-1 rounded text-xs ${myStatus === "busy" ? "bg-white/30" : "bg-white/10 hover:bg-white/20"}`}
-            >
-              Ocupado
-            </button>
+          <div className="flex items-center gap-2">
+            {getStatusInfo(currentStatus).icon}
+            <span className="text-xs font-brutalist">{username}</span>
           </div>
         </div>
 
-        {/* Contacts List */}
+        {/* NAKAMAs List */}
         <div className="flex-1 overflow-auto">
-          <div className="p-2 bg-[#F3F3F3] text-xs border-b border-[var(--color-raza-gray)]">
-            Contactos ({contacts.filter(c => c.status !== "offline").length})
-          </div>
-          <div className="divide-y divide-[var(--color-raza-gray)]">
-            {contacts.map((contact) => (
-              <button
-                key={contact.id}
-                onClick={() => openChat(contact.id)}
-                className="w-full p-2 hover:bg-[#E5F3FF] text-left flex items-start gap-2 transition-colors"
-              >
-                <div className="relative">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded flex items-center justify-center text-xl">
-                    {contact.avatar}
+          {nakamas.map((nakama) => {
+            const statusInfo = getStatusInfo(nakama.status);
+            return (
+              <div key={nakama.id} className="p-2 border-b border-[var(--color-win95-shadow)] hover:bg-[var(--color-win95-face)]">
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Circle size={12} className={`${statusInfo.color} fill-current`} />
+                    {statusInfo.icon}
                   </div>
-                  <Circle
-                    size={10}
-                    fill={getStatusColor(contact.status)}
-                    stroke="white"
-                    strokeWidth={2}
-                    className="absolute -bottom-1 -right-1"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1">
-                    <span className="text-sm truncate">
-                      {contact.name}
-                    </span>
-                    {contact.isAgent && (
-                      <span className="text-xs bg-[var(--color-raza-accent)] text-black px-1 rounded">AI</span>
-                    )}
-                  </div>
-                  <p className="text-xs text-[var(--color-raza-gray)] truncate">
-                    {contact.personalMessage}
-                  </p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Area */}
-      <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-[#E5F3FF] to-[#FFF5E5] p-8">
-        <div className="text-center">
-          <div className="text-6xl mb-4">💬</div>
-          <h3 className="font-brutalist text-xl mb-2">MSN Messenger</h3>
-          <p className="text-[var(--color-raza-gray)]">
-            Selecciona un contacto para comenzar a chatear
-          </p>
-          <p className="text-sm text-[var(--color-raza-gray)] mt-2">
-            🐰 BeatBunny y 🦍 UngaBunga están esperándote!
-          </p>
-        </div>
-      </div>
-
-      {/* Chat Windows */}
-      <AnimatePresence>
-        {openChats.map((chat, index) => {
-          const contact = contacts.find((c) => c.id === chat.contactId);
-          if (!contact) return null;
-
-          const chatMessages = messages[chat.contactId] || [];
-
-          return (
-            <motion.div
-              key={chat.contactId}
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ 
-                opacity: 1, 
-                y: 0, 
-                scale: 1,
-                height: chat.isMinimized ? "auto" : "500px"
-              }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="fixed bottom-0 win95-bevel-out bg-white shadow-2xl flex flex-col"
-              style={{
-                right: `${20 + index * 320}px`,
-                width: "300px",
-                zIndex: 1000 + index,
-              }}
-            >
-              {/* Chat Window Header */}
-              <div className="bg-gradient-to-r from-[#0078D4] to-[#50E6FF] text-white p-2 flex items-center justify-between cursor-move">
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-pink-400 rounded flex items-center justify-center text-sm">
-                    {contact.avatar}
-                  </div>
-                  <span className="text-sm truncate">{contact.name}</span>
-                </div>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => toggleMinimize(chat.contactId)}
-                    className="w-5 h-5 bg-white/20 hover:bg-white/30 rounded flex items-center justify-center"
-                  >
-                    <Minus size={12} />
-                  </button>
-                  <button
-                    onClick={() => closeChat(chat.contactId)}
-                    className="w-5 h-5 bg-white/20 hover:bg-red-500 rounded flex items-center justify-center"
-                  >
-                    <X size={12} />
-                  </button>
-                </div>
-              </div>
-
-              {!chat.isMinimized && (
-                <>
-                  {/* Messages Area */}
-                  <div className="flex-1 overflow-auto p-3 space-y-2 bg-white">
-                    {chatMessages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`flex ${msg.sender === "me" ? "justify-end" : "justify-start"}`}
-                      >
-                        <div
-                          className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm ${
-                            msg.sender === "me"
-                              ? "bg-[#0078D4] text-white"
-                              : "bg-[#F3F3F3] text-black"
-                          }`}
-                        >
-                          <p className="break-words">{msg.text}</p>
-                          <p className="text-xs mt-1 opacity-70">
-                            {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Input Area */}
-                  <div className="border-t-2 border-[var(--color-raza-gray)] p-2">
-                    {/* Emoticons Panel */}
-                    {showEmoticons === chat.contactId && (
-                      <div className="bg-white border-2 border-[var(--color-raza-gray)] p-2 mb-2 grid grid-cols-5 gap-1">
-                        {EMOTICONS.map((emoticon) => (
-                          <button
-                            key={emoticon.code}
-                            onClick={() => insertEmoticon(chat.contactId, emoticon.emoji)}
-                            className="text-xl hover:bg-[#E5F3FF] p-1 rounded"
-                            title={emoticon.code}
-                          >
-                            {emoticon.emoji}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setShowEmoticons(showEmoticons === chat.contactId ? null : chat.contactId)}
-                        className="win95-bevel-out bg-[var(--color-win95-face)] p-1 hover:win95-bevel-in"
-                        title="Emoticones"
-                      >
-                        <Smile size={16} />
-                      </button>
-                      <input
-                        type="text"
-                        value={inputTexts[chat.contactId] || ""}
-                        onChange={(e) => setInputTexts({ ...inputTexts, [chat.contactId]: e.target.value })}
-                        onKeyDown={(e) => e.key === "Enter" && sendMessage(chat.contactId)}
-                        placeholder="Escribe un mensaje..."
-                        className="flex-1 win95-bevel-in px-2 py-1 text-sm"
-                      />
-                      <button
-                        onClick={() => sendMessage(chat.contactId)}
-                        disabled={!inputTexts[chat.contactId]?.trim()}
-                        className="win95-bevel-out bg-[var(--color-win95-face)] px-3 py-1 hover:win95-bevel-in disabled:opacity-50"
-                      >
-                        <Send size={16} />
-                      </button>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-brutalist truncate">
+                      {nakama.username}
+                    </div>
+                    <div className="text-xs text-[var(--color-raza-gray)] truncate">
+                      {nakama.status}
                     </div>
                   </div>
-                </>
-              )}
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <div className="bg-[var(--color-win95-titlebar)] text-white p-4 win95-bevel-out">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-brutalist tracking-wider">CHAT GENERAL</h2>
+              <p className="text-xs mt-1">Canal principal de los NAKAMAS</p>
+            </div>
+            <button
+              onClick={sendBuzz}
+              className="win95-bevel-out bg-yellow-500 text-black px-3 py-1 text-xs font-brutalist hover:win95-bevel-in flex items-center gap-1"
+            >
+              <Zap size={12} />
+              ZUMBIDO
+            </button>
+          </div>
+        </div>
+
+        {/* Messages Area */}
+        <div className="flex-1 overflow-auto p-4 space-y-3 bg-white">
+          <AnimatePresence>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`flex ${message.sender_wallet === walletAddress ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`max-w-xs lg:max-w-md px-3 py-2 rounded-lg ${
+                  message.sender_wallet === walletAddress
+                    ? 'bg-[var(--color-raza-accent)] text-white'
+                    : message.message_type === 'buzz'
+                    ? 'bg-yellow-200 border-2 border-yellow-400 animate-pulse'
+                    : 'bg-[var(--color-win95-face)] win95-bevel-in'
+                }`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-brutalist">
+                      {message.sender_username}
+                    </span>
+                    <span className="text-xs opacity-75">
+                      {formatTime(message.created_at)}
+                    </span>
+                  </div>
+                  <div className={`text-sm ${
+                    message.message_type === 'buzz' ? 'font-brutalist text-center' : ''
+                  }`}>
+                    {message.message_type === 'buzz' ? (
+                      <div className="flex items-center justify-center gap-1">
+                        <Zap size={16} className="text-yellow-600" />
+                        {message.message}
+                        <Zap size={16} className="text-yellow-600" />
+                      </div>
+                    ) : (
+                      message.message
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Message Input */}
+        <div className="border-t-2 border-[var(--color-win95-shadow)] p-4 bg-[var(--color-win95-face)]">
+          <form onSubmit={sendMessage} className="flex gap-2">
+            <input
+              type="text"
+              value={currentMessage}
+              onChange={(e) => setCurrentMessage(e.target.value)}
+              placeholder="Escribe tu mensaje..."
+              className="flex-1 win95-bevel-in p-2 font-win95"
+              maxLength={500}
+            />
+            <button
+              type="submit"
+              disabled={!currentMessage.trim()}
+              className="win95-bevel-out bg-[var(--color-raza-accent)] text-white px-4 py-2 font-brutalist hover:win95-bevel-in disabled:opacity-50 flex items-center gap-2"
+            >
+              <Send size={16} />
+              ENVIAR
+            </button>
+          </form>
+          <div className="flex justify-between items-center mt-2 text-xs text-[var(--color-raza-gray)]">
+            <span>Ganas +2 puntos por mensaje</span>
+            <span>{currentMessage.length}/500</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

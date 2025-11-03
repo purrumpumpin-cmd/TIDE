@@ -5,7 +5,7 @@
 
 import { projectId, publicAnonKey } from './supabase/info';
 
-const BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-7bf7363c`;
+const BASE_URL = `https://${projectId}.supabase.co/functions/v1`;
 
 interface ApiOptions {
   method?: string;
@@ -50,16 +50,43 @@ async function apiCall(endpoint: string, options: ApiOptions = {}) {
 // ═══════════════════════════════════════════════════════════
 
 export const authApi = {
-  async verifySIWE(address: string, signature: string, message: string) {
-    return apiCall('/auth/siwe/verify', {
+  async verifySIWE(walletAddress: string, signature: string, message: string) {
+    return apiCall('/auth-siwe', {
       method: 'POST',
-      body: { address, signature, message },
+      body: { walletAddress, signature, message },
     });
   },
 
   async getSession(sessionToken: string) {
     return apiCall('/auth/session', {
       sessionToken,
+    });
+  },
+};
+
+// ═══════════════════════════════════════════════════════════
+// POINTS API
+// ═══════════════════════════════════════════════════════════
+
+export const pointsApi = {
+  async getPoints(walletAddress: string) {
+    return apiCall('/points-manager', {
+      method: 'POST',
+      body: { action: 'get', walletAddress },
+    });
+  },
+
+  async addPoints(walletAddress: string, points: number, activity?: string) {
+    return apiCall('/points-manager', {
+      method: 'POST',
+      body: { action: 'add', walletAddress, points, activity },
+    });
+  },
+
+  async processReferral(walletAddress: string, referralCode: string) {
+    return apiCall('/points-manager', {
+      method: 'POST',
+      body: { action: 'referral', walletAddress, referralCode },
     });
   },
 };

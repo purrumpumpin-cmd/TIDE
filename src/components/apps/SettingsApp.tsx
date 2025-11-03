@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from "react";
 import { Settings, Volume2, VolumeX, Zap, Eye } from "lucide-react";
+import { PointsDashboard } from "../PointsDashboard";
 
 export function SettingsApp() {
   const [soundEnabled, setSoundEnabled] = useState(
@@ -15,6 +16,9 @@ export function SettingsApp() {
   );
   const [animationsEnabled, setAnimationsEnabled] = useState(
     localStorage.getItem('tidelabs_animations') !== 'false'
+  );
+  const [walletAddress, setWalletAddress] = useState<string | null>(
+    localStorage.getItem('tidelabs_wallet')
   );
 
   useEffect(() => {
@@ -57,6 +61,10 @@ export function SettingsApp() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-6 space-y-6">
+        {/* Points Dashboard */}
+        <div className="win95-bevel-out bg-white p-4">
+          <PointsDashboard walletAddress={walletAddress} />
+        </div>
         {/* Visual Settings */}
         <div className="win95-bevel-out bg-white p-4">
           <div className="flex items-center gap-3 mb-4">

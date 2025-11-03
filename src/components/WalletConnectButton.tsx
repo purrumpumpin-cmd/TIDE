@@ -43,13 +43,15 @@ export function WalletConnectButton({ onConnect }: WalletConnectButtonProps) {
           setAddress(userAddress);
           
           // Guardar session token en localStorage
-          localStorage.setItem('tidelabs_session', response.sessionToken);
+          localStorage.setItem('tidelabs_session', response.token || '');
+          localStorage.setItem('tidelabs_wallet', userAddress);
           
           if (onConnect) {
-            onConnect(userAddress, response.sessionToken);
+            onConnect(userAddress, response.token || '');
           }
           
           console.log("Wallet conectada y autenticada:", userAddress);
+          console.log("Usuario:", response.user);
         }
       } else {
         alert(
@@ -67,6 +69,7 @@ export function WalletConnectButton({ onConnect }: WalletConnectButtonProps) {
   const disconnectWallet = () => {
     setAddress(null);
     localStorage.removeItem('tidelabs_session');
+    localStorage.removeItem('tidelabs_wallet');
   };
 
   const formatAddress = (addr: string) => {

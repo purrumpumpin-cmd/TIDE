@@ -78,12 +78,44 @@ npx serve build
 - [x] 13 Aplicaciones Funcionales
 - [x] Build Optimizado Sin Warnings
 
-### 🔄 **Pendiente para 100%**
-- [ ] APIs Reales (OpenAI, Smart Contracts, NFT APIs)
-- [ ] Optimizaciones de Performance
-- [ ] Responsive Mobile
-- [ ] Testing Automatizado
-- [ ] Documentación de APIs
+### 🔄 **Roadmap para Funcionalidad Completa**
+
+#### **Fase 1: Web3 Core y Sistema de Puntos** 🎯 **(Prioridad Alta)**
+- [ ] **Conexión de Wallet SIWE** - Finalizar botón `[Conectar Alma]` con WalletConnect
+- [ ] **Sistema de Puntos** - Tabla `user_points` en Supabase con lógica de asignación
+- [ ] **Dashboard de Puntos** - Componente visual en `SETTINGS.SYS` para ver saldo
+- [ ] **Lógica de Airdrop** - Asignación automática por actividad y referidos
+
+#### **Fase 2: TUNOVA Filtro Ecosystem** 🎵 **(Funcionalidad Clave)**
+- [ ] **SaaS de Creación de Casetes** - Herramienta drag & drop para artistas aprobados
+- [ ] **Radio Pirata Integrada** - Slots exclusivos y booking system
+- [ ] **Conexión RAZA.AZAR** - Lanzamiento automático de colecciones NFT
+- [ ] **Dashboard GENESIS** - Centro de control unificado del ecosistema
+
+#### **Fase 3: Área Recreativa Épica** 🎮 **(Engagement)**
+- [ ] **Icono ARCADE.EXE** - Acceso visual llamativo en desktop
+- [ ] **Integración iframes** - floor796.com y emupedia.net embebidos
+- [ ] **Sistema de Recomendaciones** - Formulario para que NAKAMAS sugieran juegos
+
+#### **Fase 4: MSN.CHAT Pirata** 💬 **(Comunidad)**
+- [ ] **Chat en Tiempo Real** - Supabase Realtime WebSockets
+- [ ] **Estados Piratas** - "Izando la Bandera", "En el Galeón", "Buscando Tesoro"
+- [ ] **Función Zumbido** - Vibración de ventana con sonido retro
+- [ ] **Lista de NAKAMAS** - Usuarios online con estados
+
+#### **Fase 5: Crowdfunding y Mascotas IA** 💰 **(Monetización)**
+- [ ] **Pasarela de Pagos Crypto** - Coinbase Commerce o contrato multi-token
+- [ ] **Mascotas IA Conversacionales** - OpenRouter API con GPT-4.1-mini
+  - [ ] **PoseiDrop** - Experto en logística y airdrops
+  - [ ] **UngaBunga** - Conoce el lore del Capitán y el OS
+  - [ ] **BeatBunny** - Especialista en música y TUNOVA.IO
+- [ ] **Base de Conocimiento** - JSON/DB con respuestas específicas por mascota
+
+#### **Fase 6: Optimizaciones Finales** ⚡ **(Pulido)**
+- [ ] **APIs Reales Conectadas** - Todas las 5 APIs funcionando
+- [ ] **Responsive Mobile** - Adaptación para dispositivos móviles
+- [ ] **Testing Automatizado** - Suite de tests para funcionalidades críticas
+- [ ] **Performance Optimization** - Lazy loading y code splitting avanzado
 
 ## 🏴‍☠️ Funcionalidades Destacadas
 
@@ -102,6 +134,21 @@ npx serve build
 - Floor796.com embebido (mundo pixel interactivo)
 - EmuOS (emulador de sistemas retro)
 - Sistema de sugerencias de la comunidad
+
+### **🖥️ WAITLIST.SH - Terminal MS-DOS Auténtico** ⭐ **NUEVO**
+- **Terminal completamente negro** con texto verde fosforescente
+- **ASCII Art del logo TIDElabs** en el arranque
+- **13 Roles NAKAMA organizados** por dificultad (Novato → Legendario)
+- **Sistema de requisitos dinámicos** - Cada rol tiene requisitos específicos
+- **Flujo de registro de 5 pasos** con validación completa
+- **Comandos MS-DOS**: `REGISTER`, `ROLES`, `STATUS`, `HELP`, `CLEAR`
+- **Efectos visuales retro** - Sombras, animaciones, cursores parpadeantes
+
+#### **Roles Disponibles:**
+- 🟢 **NOVATO**: Grumete, Marinero, Cocinero
+- 🔵 **EXPERIMENTADO**: Navegante, Contramaestre, Artillero, Músico
+- 🟡 **VETERANO**: Cartógrafo, Timonel, Médico  
+- 🔴 **LEGENDARIO**: Capitán de Puerto, Explorador, Oficial
 
 ### **💰 CROWDFUND.WEB3**
 - Acepta múltiples criptomonedas

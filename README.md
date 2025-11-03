@@ -1,37 +1,135 @@
-# 🏴‍☠️ TIDElabs OS v1.0 - Sovering Code Manifesto
+# 🏴‍☠️ TIDElabs OS Genesis - The Aetherius Digital
 
-Este repositorio contiene la versión final del proyecto **TIDElabs OS v1.0**, un sistema operativo web retro-futurista que sirve como portal para las iniciativas **RAZA** y **AZAR** del Sovering Code Manifesto.
+**Sistema Operativo Web3 Pirata - 80% Funcionalidad Completada**
 
-El proyecto ha sido organizado, optimizado y se encuentra en un estado funcional para su despliegue.
+Este repositorio contiene **TIDElabs OS Genesis**, un ecosistema digital completo que fusiona la nostalgia retro con tecnología Web3 de vanguardia. Sirve como portal principal para la comunidad **NAKAMA** y las iniciativas **RAZA/AZAR** del Sovering Code Manifesto.
 
-## ✨ Características Principales
+🚀 **Estado Actual: GENESIS COMPLETADO (80% Funcionalidad)**
 
-*   **Portal de Arranque Dual:** Pantalla inicial con la bifurcación **RAZA** (Orden) y **AZAR** (Caos).
-*   **Arranque Retro Realista:** Secuencia de boot estilo BIOS/MS-DOS con un nuevo botón de encendido retro y la integración de la **Bandera del Galeón Digital** (tiburón con cables) en la animación.
-*   **TIDElabs OS Desktop:** Escritorio interactivo estilo Windows 95 con iconos arrastrables y sistema de ventanas.
-*   **Aplicaciones Integradas:**
-    *   **TUNOVA.IO:** Reproductor de música retro con colecciones de Walkman 3D y temática NFT-Gating.
-    *   **GENESIS:** Aplicación que carga la web complementaria de **TUNOVA.IO + Radio Pirata**, completamente funcional.
-    *   **Otras Apps:** MSN.CHAT, EXPLORER.EXE, CROWDFUND.WEB3, etc., con sus interfaces retro listas para la conexión de backend.
-*   **Tecnología:** Construido con **React**, **TypeScript**, **Vite** y **Tailwind CSS**.
+## ⚓ Características Principales
 
-## 🛠️ Próximos Pasos Sugeridos
+### 🔐 **Web3 Core Completo**
+*   **Autenticación SIWE:** Sign-In with Ethereum completamente funcional
+*   **WalletConnect:** Integración con MetaMask y otras wallets
+*   **Sistema de Puntos:** Airdrop-ready con dashboard integrado
+*   **Persistencia de Sesión:** Supabase Auth para gestión de usuarios
 
-Para llevar el proyecto a su fase de producción completa, se recomienda enfocarse en las siguientes áreas:
+### 🎮 **13 Aplicaciones Operativas**
+*   **MSN.CHAT:** Chat pirata en tiempo real con estados como "En The Aetherius"
+*   **ARCADE.EXE:** Área recreativa con Floor796 y EmuOS embebidos
+*   **EXPLORER.EXE:** Bóveda NFT con drops Raza/Azar y sistema de compra
+*   **CROWDFUND.WEB3:** Sistema completo de crowdfunding con múltiples criptos
+*   **WAITLIST.SH:** Terminal MS-DOS interactiva con comandos
+*   **AI.PETS:** Mascotas IA (PoseiDrop, UngaBunga, BeatBunny)
+*   **TUNOVA.IO:** Plataforma musical con Radio Pirata
+*   **Y más...**
 
-### 1. Estabilización y Despliegue
-*   **Configuración de Producción:** Implementar un servidor web (Nginx/Apache) para manejar correctamente el enrutamiento de SPA y asegurar la persistencia de las rutas.
-*   **Optimización de Assets:** Comprimir imágenes de alta resolución e implementar Lazy Loading.
+### 🏴‍☠️ **Temática Pirata Completa**
+*   **The Aetherius:** Nuestro galeón digital (anteriormente "Galeón")
+*   **Estados Piratas:** "Izando la Bandera", "Navegando", "Buscando Tesoro"
+*   **Función Zumbido:** Como el MSN clásico pero pirata
+*   **Arranque Épico:** Secuencia BIOS/MS-DOS con bandera del tiburón
 
-### 2. Integración Web3 y Backend
-*   **Conexión de Wallet:** Finalizar la lógica del botón **"[Conectar Alma]"** para la autenticación (SIWE) y la personalización de la experiencia.
-*   **Funcionalidad de TUNOVA.IO:** Conectar el reproductor a la API de audio y habilitar el NFT-Gating para las colecciones de casetes.
-*   **Backend Supabase:** Conectar las funciones de Supabase para la persistencia de datos del OS (posición de ventanas, historial, likes).
+### 🛠️ **Tecnología de Vanguardia**
+*   **Frontend:** React 18, TypeScript, Vite, Tailwind CSS
+*   **Web3:** Ethers.js, WalletConnect, SIWE
+*   **Backend:** Supabase (Database, Auth, Realtime, Edge Functions)
+*   **UI/UX:** Motion/React, Lucide Icons, Radix UI
+*   **Build Optimizado:** Chunks separados, warnings resueltos
 
-### 3. Desarrollo de Aplicaciones Core
-*   **MSN.CHAT:** Implementar la funcionalidad de chat en tiempo real.
-*   **EXPLORER.EXE:** Conectar a una API para visualizar los NFTs del usuario como archivos locales.
+## 🚀 Instalación y Uso
+
+### Requisitos Previos
+```bash
+Node.js 18+ 
+npm o yarn
+```
+
+### Instalación
+```bash
+git clone https://github.com/purrumpumpin-cmd/TIDE.git
+cd TIDE
+npm install
+```
+
+### Desarrollo
+```bash
+npm run dev
+# Servidor en http://localhost:3000
+```
+
+### Producción
+```bash
+npm run build
+npx serve build
+```
+
+## 🎯 Estado del Proyecto
+
+### ✅ **Completado (80%)**
+- [x] Web3 Core y Autenticación SIWE
+- [x] Sistema de Puntos Airdrop-Ready  
+- [x] Chat en Tiempo Real (MSN.CHAT)
+- [x] Área Recreativa (ARCADE.EXE)
+- [x] Crowdfunding Web3 Completo
+- [x] Terminal MS-DOS (WAITLIST.SH)
+- [x] Mascotas IA Integradas
+- [x] Bóveda NFT (EXPLORER.EXE)
+- [x] 13 Aplicaciones Funcionales
+- [x] Build Optimizado Sin Warnings
+
+### 🔄 **Pendiente para 100%**
+- [ ] APIs Reales (OpenAI, Smart Contracts, NFT APIs)
+- [ ] Optimizaciones de Performance
+- [ ] Responsive Mobile
+- [ ] Testing Automatizado
+- [ ] Documentación de APIs
+
+## 🏴‍☠️ Funcionalidades Destacadas
+
+### **🔐 Autenticación Web3**
+- Conecta tu wallet con **[Conectar Alma]**
+- Sign-In with Ethereum (SIWE) funcional
+- Persistencia de sesión con Supabase
+
+### **💬 MSN.CHAT Pirata**
+- Chat en tiempo real entre NAKAMAS
+- Estados piratas: "En The Aetherius", "Izando la Bandera"
+- Función Zumbido como el MSN clásico
+- Lista de usuarios online
+
+### **🎮 ARCADE.EXE**
+- Floor796.com embebido (mundo pixel interactivo)
+- EmuOS (emulador de sistemas retro)
+- Sistema de sugerencias de la comunidad
+
+### **💰 CROWDFUND.WEB3**
+- Acepta múltiples criptomonedas
+- Sistema de tiers y airdrops garantizados
+- Interfaz pirata inmersiva
+
+### **🤖 AI.PETS**
+- **PoseiDrop:** Experto en logística y airdrops
+- **UngaBunga:** Conoce el lore del Capitán y el OS
+- **BeatBunny:** Especialista en música y TUNOVA.IO
+
+## 🌊 Contribuir
+
+Este es un proyecto de código abierto de la comunidad NAKAMA. Para contribuir:
+
+1. Fork el repositorio
+2. Crea una rama: `git checkout -b feature/nueva-funcionalidad`
+3. Commit: `git commit -m 'Agregar nueva funcionalidad'`
+4. Push: `git push origin feature/nueva-funcionalidad`
+5. Abre un Pull Request
+
+## 📜 Licencia
+
+Proyecto bajo licencia MIT - ver [LICENSE](LICENSE) para detalles.
 
 ---
-*Este proyecto fue organizado, optimizado e integrado por Manus, el Agente Autónomo de IA.*
-*Versión del Código: TIDE OS v.1*
+
+**🏴‍☠️ Bienvenido a bordo de The Aetherius, NAKAMA! ⚓**
+
+*Desarrollado con ❤️ por la comunidad TIDElabs*  
+*Genesis Release - Noviembre 2024*

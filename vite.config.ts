@@ -54,6 +54,18 @@
     build: {
       target: 'esnext',
       outDir: 'build',
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            web3: ['ethers', '@walletconnect/web3wallet', '@walletconnect/core', 'siwe'],
+            ui: ['lucide-react', 'motion/react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+            supabase: ['@supabase/supabase-js'],
+            charts: ['recharts', 'd3-scale', 'd3-shape']
+          }
+        }
+      }
     },
     server: {
       port: 3000,

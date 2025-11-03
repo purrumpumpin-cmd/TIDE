@@ -6,6 +6,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, SkipForward, SkipBack, Volume2, Radio, ChevronsUp, Award, Zap, Lock, Unlock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { tunovaApi } from "../../utils/api";
 
 // ═══════════════════════════════════════════════════════════
 // TIPOS Y ESTRUCTURAS DE DATOS
@@ -381,7 +382,6 @@ export function TunovaApp({ userNFTs = [], walletAddress }: TunovaAppProps) {
       const sessionToken = localStorage.getItem('tidelabs_session');
       if (!sessionToken) return;
 
-      const { tunovaApi } = await import("../../utils/api");
       await tunovaApi.addPoints(points, time, selectedCassette?.id || "radio-pirata", sessionToken);
       console.log(`✅ ${points} puntos guardados en el backend`);
     } catch (error) {

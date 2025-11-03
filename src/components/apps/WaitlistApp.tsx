@@ -16,22 +16,160 @@ interface TerminalLine {
   timestamp: Date;
 }
 
-const NAKAMA_ROLES = [
-  'Navegante', 'Contramaestre', 'Artillero', 'Vigía', 'Cocinero',
-  'Carpintero', 'Médico', 'Músico', 'Cartógrafo', 'Timonel',
-  'Grumete', 'Marinero', 'Oficial', 'Capitán de Puerto', 'Explorador'
+// ═══════════════════════════════════════════════════════════
+// ROLES NAKAMA CON REQUISITOS DINÁMICOS
+// ═══════════════════════════════════════════════════════════
+
+interface NakamaRole {
+  id: string;
+  name: string;
+  description: string;
+  requirements: string[];
+  difficulty: 'Novato' | 'Experimentado' | 'Veterano' | 'Legendario';
+  benefits: string[];
+  emoji: string;
+}
+
+const NAKAMA_ROLES: NakamaRole[] = [
+  // ROLES NOVATOS (Sin requisitos especiales)
+  {
+    id: 'grumete',
+    name: 'Grumete',
+    description: 'Aprendiz de marinero, primer paso en The Aetherius',
+    requirements: ['Ganas de aprender', 'Actitud positiva'],
+    difficulty: 'Novato',
+    benefits: ['Acceso básico al OS', 'Puntos de bienvenida'],
+    emoji: '🧑‍🚀'
+  },
+  {
+    id: 'marinero',
+    name: 'Marinero',
+    description: 'Tripulante básico con conocimientos fundamentales',
+    requirements: ['Experiencia básica en crypto', 'Conocimiento de Discord/Telegram'],
+    difficulty: 'Novato',
+    benefits: ['Acceso a chat grupal', 'Notificaciones prioritarias'],
+    emoji: '⚓'
+  },
+  {
+    id: 'cocinero',
+    name: 'Cocinero',
+    description: 'Encargado de mantener la moral alta con buena comida',
+    requirements: ['Habilidades de community management', 'Experiencia en redes sociales'],
+    difficulty: 'Novato',
+    benefits: ['Acceso a herramientas de contenido', 'Rol especial en Discord'],
+    emoji: '👨‍🍳'
+  },
+
+  // ROLES EXPERIMENTADOS
+  {
+    id: 'navegante',
+    name: 'Navegante',
+    description: 'Experto en rutas digitales y estrategias de navegación',
+    requirements: ['Portfolio de proyectos crypto', 'Experiencia en DeFi (6+ meses)', 'Conocimiento de análisis técnico'],
+    difficulty: 'Experimentado',
+    benefits: ['Acceso a señales de trading', 'Dashboard avanzado', 'Grupo VIP'],
+    emoji: '🧭'
+  },
+  {
+    id: 'contramaestre',
+    name: 'Contramaestre',
+    description: 'Líder de equipo y organizador de operaciones',
+    requirements: ['Experiencia liderando equipos', 'Historial en proyectos Web3', 'Referencias verificables'],
+    difficulty: 'Experimentado',
+    benefits: ['Acceso a herramientas de gestión', 'Comisiones por referidos', 'Voto en decisiones'],
+    emoji: '👨‍✈️'
+  },
+  {
+    id: 'artillero',
+    name: 'Artillero',
+    description: 'Especialista en seguridad y defensa digital',
+    requirements: ['Conocimientos de ciberseguridad', 'Experiencia en auditorías', 'Certificaciones técnicas'],
+    difficulty: 'Experimentado',
+    benefits: ['Acceso a herramientas de seguridad', 'Bounties por vulnerabilidades', 'Rol de moderador'],
+    emoji: '💥'
+  },
+  {
+    id: 'musico',
+    name: 'Músico',
+    description: 'Artista que aporta cultura y entretenimiento',
+    requirements: ['Portfolio musical', 'Presencia en plataformas digitales', 'Experiencia en NFTs musicales'],
+    difficulty: 'Experimentado',
+    benefits: ['Acceso prioritario a TUNOVA.IO', 'Herramientas de creación', 'Revenue share'],
+    emoji: '🎵'
+  },
+
+  // ROLES VETERANOS
+  {
+    id: 'cartografo',
+    name: 'Cartógrafo',
+    description: 'Analista de mercados y creador de estrategias',
+    requirements: ['Experiencia en análisis de mercados (2+ años)', 'Historial de predicciones exitosas', 'Conocimiento avanzado de DeFi'],
+    difficulty: 'Veterano',
+    benefits: ['Acceso a datos premium', 'Herramientas de análisis', 'Comisiones por insights'],
+    emoji: '🗺️'
+  },
+  {
+    id: 'timonel',
+    name: 'Timonel',
+    description: 'Piloto experto que guía el rumbo del proyecto',
+    requirements: ['Experiencia en desarrollo blockchain', 'Participación en DAOs', 'Historial de contribuciones open source'],
+    difficulty: 'Veterano',
+    benefits: ['Acceso a repositorios privados', 'Voto ponderado en governance', 'Tokens de recompensa'],
+    emoji: '🚢'
+  },
+  {
+    id: 'medico',
+    name: 'Médico',
+    description: 'Especialista en resolver problemas y crisis',
+    requirements: ['Experiencia en resolución de conflictos', 'Conocimiento legal en crypto', 'Historial de mediación'],
+    difficulty: 'Veterano',
+    benefits: ['Acceso a canales de crisis', 'Herramientas de mediación', 'Compensación por resoluciones'],
+    emoji: '⚕️'
+  },
+
+  // ROLES LEGENDARIOS
+  {
+    id: 'capitan-puerto',
+    name: 'Capitán de Puerto',
+    description: 'Autoridad máxima en operaciones portuarias',
+    requirements: ['Experiencia fundando proyectos crypto', 'Red de contactos verificada', 'Inversión mínima de $10K', 'Referencias de otros capitanes'],
+    difficulty: 'Legendario',
+    benefits: ['Acceso completo al ecosistema', 'Revenue share del 2%', 'Voto ejecutivo', 'NFT exclusivo'],
+    emoji: '🏴‍☠️'
+  },
+  {
+    id: 'explorador',
+    name: 'Explorador',
+    description: 'Pionero que descubre nuevas oportunidades',
+    requirements: ['Historial de early adoption', 'Participación en 5+ proyectos exitosos', 'Reputación on-chain verificable'],
+    difficulty: 'Legendario',
+    benefits: ['Acceso a oportunidades pre-launch', 'Allocations garantizadas', 'Asesoría directa del equipo'],
+    emoji: '🔍'
+  },
+  {
+    id: 'oficial',
+    name: 'Oficial',
+    description: 'Miembro del consejo directivo del proyecto',
+    requirements: ['Experiencia C-level en crypto', 'Inversión mínima de $25K', 'Aprobación del consejo actual', 'KYC completo'],
+    difficulty: 'Legendario',
+    benefits: ['Participación en decisiones estratégicas', 'Revenue share del 5%', 'Acceso a información privilegiada', 'NFT de fundador'],
+    emoji: '⭐'
+  }
 ];
 
 export function WaitlistApp() {
   const [lines, setLines] = useState<TerminalLine[]>([]);
   const [currentInput, setCurrentInput] = useState('');
-  const [currentStep, setCurrentStep] = useState<'welcome' | 'username' | 'email' | 'role' | 'referral' | 'complete'>('welcome');
+  const [currentStep, setCurrentStep] = useState<'welcome' | 'username' | 'email' | 'role' | 'role_details' | 'requirements' | 'referral' | 'complete'>('welcome');
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     role: '',
-    referralCode: ''
+    roleId: '',
+    referralCode: '',
+    requirementsConfirmed: false
   });
+  const [selectedRoleIndex, setSelectedRoleIndex] = useState<number>(-1);
   const [loading, setLoading] = useState(false);
   const [walletAddress] = useState<string | null>(localStorage.getItem('tidelabs_wallet'));
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -52,43 +190,127 @@ export function WaitlistApp() {
     const welcomeLines: TerminalLine[] = [
       {
         id: '1',
-        text: 'TIDElabs OS v1.0 - Sistema de Registro NAKAMA',
+        text: '████████╗██╗██████╗ ███████╗██╗      █████╗ ██████╗ ███████╗',
         type: 'system',
         timestamp: new Date()
       },
       {
         id: '2',
-        text: 'Copyright (C) 2024 TIDElabs. Todos los derechos reservados.',
+        text: '╚══██╔══╝██║██╔══██╗██╔════╝██║     ██╔══██╗██╔══██╗██╔════╝',
         type: 'system',
         timestamp: new Date()
       },
       {
         id: '3',
-        text: '',
+        text: '   ██║   ██║██║  ██║█████╗  ██║     ███████║██████╔╝███████╗',
         type: 'system',
         timestamp: new Date()
       },
       {
         id: '4',
-        text: '¡Ahoy, futuro NAKAMA! Bienvenido al proceso de registro.',
-        type: 'info',
+        text: '   ██║   ██║██║  ██║██╔══╝  ██║     ██╔══██║██╔══██╗╚════██║',
+        type: 'system',
         timestamp: new Date()
       },
       {
         id: '5',
-        text: 'Únete a la lista de espera y obtén puntos por referir a otros.',
-        type: 'info',
+        text: '   ██║   ██║██████╔╝███████╗███████╗██║  ██║██████╔╝███████║',
+        type: 'system',
         timestamp: new Date()
       },
       {
         id: '6',
-        text: '',
+        text: '   ╚═╝   ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚══════╝',
         type: 'system',
         timestamp: new Date()
       },
       {
         id: '7',
-        text: 'Escribe "REGISTER" para comenzar o "HELP" para ver comandos disponibles.',
+        text: '',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '8',
+        text: 'TIDElabs OS v1.0 - NAKAMA Registration System',
+        type: 'info',
+        timestamp: new Date()
+      },
+      {
+        id: '9',
+        text: 'Copyright (C) 2024 TIDElabs Corp. All rights reserved.',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '10',
+        text: '═══════════════════════════════════════════════════════════════════════════════',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '11',
+        text: '',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '12',
+        text: 'Ahoy, future NAKAMA! Welcome to The Aetherius crew registration.',
+        type: 'info',
+        timestamp: new Date()
+      },
+      {
+        id: '13',
+        text: 'Join our waitlist and earn points by referring other pirates.',
+        type: 'info',
+        timestamp: new Date()
+      },
+      {
+        id: '14',
+        text: '',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '15',
+        text: 'Available commands:',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '16',
+        text: '  REGISTER - Start registration process',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '17',
+        text: '  HELP     - Show available commands',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '18',
+        text: '  ROLES    - View all available crew positions',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '19',
+        text: '  STATUS   - Check system statistics',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '20',
+        text: '  CLEAR    - Clear screen',
+        type: 'system',
+        timestamp: new Date()
+      },
+      {
+        id: '21',
+        text: '',
         type: 'system',
         timestamp: new Date()
       }
@@ -131,6 +353,12 @@ export function WaitlistApp() {
       case 'role':
         await handleRoleInput(command.trim());
         break;
+      case 'role_details':
+        await handleRoleDetailsInput(command.trim());
+        break;
+      case 'requirements':
+        await handleRequirementsInput(command.trim());
+        break;
       case 'referral':
         await handleReferralInput(command.trim());
         break;
@@ -140,19 +368,30 @@ export function WaitlistApp() {
   const handleWelcomeCommands = async (cmd: string) => {
     switch (cmd) {
       case 'REGISTER':
-        addLine('Iniciando proceso de registro...', 'success');
+        addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+        addLine('                        NAKAMA REGISTRATION INITIATED', 'success');
+        addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
         addLine('', 'system');
-        addLine('Paso 1/4: Nombre de usuario', 'info');
-        addLine('Ingresa tu nombre de usuario NAKAMA (sin espacios):', 'system');
+        addLine('Step 1/5: Username Configuration', 'info');
+        addLine('Enter your NAKAMA username (no spaces, 3-20 characters):', 'system');
         setCurrentStep('username');
         break;
       
       case 'HELP':
-        addLine('Comandos disponibles:', 'info');
-        addLine('  REGISTER - Iniciar proceso de registro', 'system');
-        addLine('  HELP     - Mostrar esta ayuda', 'system');
-        addLine('  CLEAR    - Limpiar pantalla', 'system');
-        addLine('  STATUS   - Ver estadísticas del sistema', 'system');
+        addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+        addLine('                              HELP SYSTEM', 'info');
+        addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+        addLine('Available commands:', 'system');
+        addLine('  REGISTER - Start NAKAMA registration process', 'system');
+        addLine('  ROLES    - Display all crew positions with requirements', 'system');
+        addLine('  STATUS   - Show system statistics and metrics', 'system');
+        addLine('  CLEAR    - Clear terminal screen', 'system');
+        addLine('  HELP     - Display this help information', 'system');
+        addLine('', 'system');
+        break;
+
+      case 'ROLES':
+        await showAllRoles();
         break;
       
       case 'CLEAR':
@@ -167,9 +406,37 @@ export function WaitlistApp() {
         break;
       
       default:
-        addLine(`Comando no reconocido: ${cmd}`, 'error');
-        addLine('Escribe "HELP" para ver comandos disponibles.', 'system');
+        addLine(`[ERROR] Unknown command: ${cmd}`, 'error');
+        addLine('Type "HELP" to see available commands.', 'system');
     }
+  };
+
+  const showAllRoles = async () => {
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('                        THE AETHERIUS CREW POSITIONS', 'info');
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('', 'system');
+
+    const rolesByDifficulty = {
+      'Novato': NAKAMA_ROLES.filter(r => r.difficulty === 'Novato'),
+      'Experimentado': NAKAMA_ROLES.filter(r => r.difficulty === 'Experimentado'),
+      'Veterano': NAKAMA_ROLES.filter(r => r.difficulty === 'Veterano'),
+      'Legendario': NAKAMA_ROLES.filter(r => r.difficulty === 'Legendario')
+    };
+
+    Object.entries(rolesByDifficulty).forEach(([difficulty, roles]) => {
+      const difficultyColor = difficulty === 'Novato' ? 'success' : 
+                             difficulty === 'Experimentado' ? 'info' :
+                             difficulty === 'Veterano' ? 'system' : 'error';
+      
+      addLine(`▓▓▓ ${difficulty.toUpperCase()} LEVEL ▓▓▓`, difficultyColor);
+      roles.forEach((role, index) => {
+        addLine(`${role.emoji} ${role.name} - ${role.description}`, 'system');
+      });
+      addLine('', 'system');
+    });
+
+    addLine('Use "REGISTER" to start the application process.', 'info');
   };
 
   const handleUsernameInput = async (username: string) => {
@@ -200,20 +467,30 @@ export function WaitlistApp() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
     if (!emailRegex.test(email)) {
-      addLine('Error: Formato de email inválido.', 'error');
+      addLine('[ERROR] Invalid email format.', 'error');
+      addLine('Please enter a valid email address:', 'system');
       return;
     }
 
     setFormData(prev => ({ ...prev, email }));
-    addLine(`Email registrado: ${email}`, 'success');
+    addLine(`[SUCCESS] Email registered: ${email}`, 'success');
     addLine('', 'system');
-    addLine('Paso 3/4: Rol en el The Aetherius', 'info');
-    addLine('Selecciona tu rol preferido escribiendo el número:', 'system');
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('Step 3/5: Crew Position Selection', 'info');
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('', 'system');
+    addLine('Select your preferred role by entering the number:', 'system');
+    addLine('', 'system');
     
     NAKAMA_ROLES.forEach((role, index) => {
-      addLine(`  ${index + 1}. ${role}`, 'system');
+      const difficultyColor = role.difficulty === 'Novato' ? 'success' : 
+                             role.difficulty === 'Experimentado' ? 'info' :
+                             role.difficulty === 'Veterano' ? 'system' : 'error';
+      addLine(`${index + 1}. ${role.emoji} ${role.name} [${role.difficulty}]`, difficultyColor);
     });
     
+    addLine('', 'system');
+    addLine('Type the number of your desired position:', 'system');
     setCurrentStep('role');
   };
 
@@ -221,18 +498,113 @@ export function WaitlistApp() {
     const roleIndex = parseInt(input) - 1;
     
     if (isNaN(roleIndex) || roleIndex < 0 || roleIndex >= NAKAMA_ROLES.length) {
-      addLine('Error: Selección inválida. Ingresa un número del 1 al 15.', 'error');
+      addLine(`[ERROR] Invalid selection. Enter a number from 1 to ${NAKAMA_ROLES.length}.`, 'error');
       return;
     }
 
     const selectedRole = NAKAMA_ROLES[roleIndex];
-    setFormData(prev => ({ ...prev, role: selectedRole }));
-    addLine(`Rol seleccionado: ${selectedRole}`, 'success');
+    setSelectedRoleIndex(roleIndex);
+    
+    addLine(`[SELECTED] ${selectedRole.emoji} ${selectedRole.name}`, 'success');
     addLine('', 'system');
-    addLine('Paso 4/4: Código de Referido (Opcional)', 'info');
-    addLine('Si tienes un código de referido, ingrésalo ahora.', 'system');
-    addLine('Si no tienes uno, escribe "SKIP" para continuar:', 'system');
-    setCurrentStep('referral');
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('                           ROLE INFORMATION', 'info');
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('', 'system');
+    addLine(`Position: ${selectedRole.name} ${selectedRole.emoji}`, 'system');
+    addLine(`Difficulty: ${selectedRole.difficulty}`, selectedRole.difficulty === 'Novato' ? 'success' : 
+                                                      selectedRole.difficulty === 'Experimentado' ? 'info' :
+                                                      selectedRole.difficulty === 'Veterano' ? 'system' : 'error');
+    addLine(`Description: ${selectedRole.description}`, 'system');
+    addLine('', 'system');
+    addLine('Benefits:', 'info');
+    selectedRole.benefits.forEach(benefit => {
+      addLine(`  ✓ ${benefit}`, 'success');
+    });
+    addLine('', 'system');
+    addLine('Type "ACCEPT" to proceed with this role or "BACK" to choose another:', 'system');
+    setCurrentStep('role_details');
+  };
+
+  const handleRoleDetailsInput = async (input: string) => {
+    const cmd = input.toUpperCase();
+    
+    if (cmd === 'ACCEPT') {
+      const selectedRole = NAKAMA_ROLES[selectedRoleIndex];
+      addLine(`[CONFIRMED] Role accepted: ${selectedRole.name}`, 'success');
+      addLine('', 'system');
+      addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+      addLine('Step 4/5: Requirements Verification', 'info');
+      addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+      addLine('', 'system');
+      addLine(`Requirements for ${selectedRole.name}:`, 'system');
+      addLine('', 'system');
+      selectedRole.requirements.forEach((req, index) => {
+        addLine(`${index + 1}. ${req}`, 'system');
+      });
+      addLine('', 'system');
+      addLine('Do you meet all these requirements?', 'info');
+      addLine('Type "YES" to confirm or "NO" to select a different role:', 'system');
+      setCurrentStep('requirements');
+    } else if (cmd === 'BACK') {
+      addLine('Returning to role selection...', 'info');
+      addLine('', 'system');
+      addLine('Select your preferred role by entering the number:', 'system');
+      addLine('', 'system');
+      
+      NAKAMA_ROLES.forEach((role, index) => {
+        const difficultyColor = role.difficulty === 'Novato' ? 'success' : 
+                               role.difficulty === 'Experimentado' ? 'info' :
+                               role.difficulty === 'Veterano' ? 'system' : 'error';
+        addLine(`${index + 1}. ${role.emoji} ${role.name} [${role.difficulty}]`, difficultyColor);
+      });
+      
+      addLine('', 'system');
+      setCurrentStep('role');
+    } else {
+      addLine('[ERROR] Invalid command. Type "ACCEPT" or "BACK".', 'error');
+    }
+  };
+
+  const handleRequirementsInput = async (input: string) => {
+    const cmd = input.toUpperCase();
+    
+    if (cmd === 'YES') {
+      const selectedRole = NAKAMA_ROLES[selectedRoleIndex];
+      setFormData(prev => ({ 
+        ...prev, 
+        role: selectedRole.name,
+        roleId: selectedRole.id,
+        requirementsConfirmed: true 
+      }));
+      
+      addLine('[SUCCESS] Requirements confirmed!', 'success');
+      addLine('', 'system');
+      addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+      addLine('Step 5/5: Referral Code (Optional)', 'info');
+      addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+      addLine('', 'system');
+      addLine('If you have a referral code, enter it now.', 'system');
+      addLine('If not, type "SKIP" to complete registration:', 'system');
+      setCurrentStep('referral');
+    } else if (cmd === 'NO') {
+      addLine('Requirements not met. Please select a different role.', 'error');
+      addLine('', 'system');
+      addLine('Returning to role selection...', 'info');
+      addLine('', 'system');
+      
+      NAKAMA_ROLES.forEach((role, index) => {
+        const difficultyColor = role.difficulty === 'Novato' ? 'success' : 
+                               role.difficulty === 'Experimentado' ? 'info' :
+                               role.difficulty === 'Veterano' ? 'system' : 'error';
+        addLine(`${index + 1}. ${role.emoji} ${role.name} [${role.difficulty}]`, difficultyColor);
+      });
+      
+      addLine('', 'system');
+      setCurrentStep('role');
+    } else {
+      addLine('[ERROR] Invalid response. Type "YES" or "NO".', 'error');
+    }
   };
 
   const handleReferralInput = async (input: string) => {
@@ -277,9 +649,15 @@ export function WaitlistApp() {
 
   const completeRegistration = async () => {
     setLoading(true);
-    addLine('Procesando registro...', 'info');
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('                        PROCESSING REGISTRATION', 'info');
+    addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+    addLine('', 'system');
+    addLine('Validating data...', 'info');
 
     try {
+      const selectedRole = NAKAMA_ROLES.find(r => r.id === formData.roleId);
+      
       const { error } = await supabase
         .from('waitlist_entries')
         .insert({
@@ -287,41 +665,62 @@ export function WaitlistApp() {
           email: formData.email,
           username: formData.username,
           selected_role: formData.role,
+          role_id: formData.roleId,
+          role_difficulty: selectedRole?.difficulty || 'Novato',
+          requirements_confirmed: formData.requirementsConfirmed,
           referral_code: formData.referralCode || null,
           referred_by: formData.referralCode || null,
+          registration_date: new Date().toISOString(),
         });
 
       if (error) throw error;
 
+      addLine('[SUCCESS] Data validated and stored.', 'success');
+
       // Process referral if provided
       if (formData.referralCode && walletAddress) {
         try {
+          addLine('Processing referral bonus...', 'info');
           await pointsApi.processReferral(walletAddress, formData.referralCode);
-          addLine('Puntos de referido procesados exitosamente.', 'success');
+          addLine('[SUCCESS] Referral bonus processed.', 'success');
         } catch (referralError) {
           console.error('Error processing referral:', referralError);
+          addLine('[WARNING] Referral processing failed.', 'error');
         }
       }
 
       addLine('', 'system');
-      addLine('¡REGISTRO COMPLETADO EXITOSAMENTE!', 'success');
+      addLine('█████████████████████████████████████████████████████████████████████████████', 'success');
+      addLine('                    REGISTRATION COMPLETED SUCCESSFULLY!', 'success');
+      addLine('█████████████████████████████████████████████████████████████████████████████', 'success');
       addLine('', 'system');
-      addLine('Resumen de tu registro:', 'info');
-      addLine(`  Usuario: ${formData.username}`, 'system');
-      addLine(`  Email: ${formData.email}`, 'system');
-      addLine(`  Rol: ${formData.role}`, 'system');
+      addLine('NAKAMA Profile Summary:', 'info');
+      addLine('═══════════════════════════════════════════════════════════════════════════════', 'system');
+      addLine(`Username: ${formData.username}`, 'system');
+      addLine(`Email: ${formData.email}`, 'system');
+      addLine(`Position: ${selectedRole?.emoji} ${formData.role}`, 'system');
+      addLine(`Difficulty Level: ${selectedRole?.difficulty}`, selectedRole?.difficulty === 'Novato' ? 'success' : 
+                                                                selectedRole?.difficulty === 'Experimentado' ? 'info' :
+                                                                selectedRole?.difficulty === 'Veterano' ? 'system' : 'error');
+      addLine(`Requirements: CONFIRMED`, 'success');
       if (formData.referralCode) {
-        addLine(`  Referido por: ${formData.referralCode}`, 'system');
+        addLine(`Referred by: ${formData.referralCode}`, 'success');
       }
+      addLine(`Registration ID: NAKAMA-${Date.now().toString().slice(-6)}`, 'info');
       addLine('', 'system');
-      addLine('Te notificaremos cuando el sistema esté listo.', 'info');
-      addLine('¡Bienvenido a bordo, NAKAMA!', 'success');
+      addLine('Next Steps:', 'info');
+      addLine('1. Check your email for confirmation', 'system');
+      addLine('2. Join our Discord community', 'system');
+      addLine('3. Wait for The Aetherius launch notification', 'system');
+      addLine('', 'system');
+      addLine('Welcome aboard The Aetherius, NAKAMA! 🏴‍☠️', 'success');
+      addLine('', 'system');
       
       setCurrentStep('complete');
     } catch (error) {
       console.error('Error completing registration:', error);
-      addLine('Error: No se pudo completar el registro.', 'error');
-      addLine('Por favor, intenta nuevamente más tarde.', 'system');
+      addLine('[ERROR] Registration failed.', 'error');
+      addLine('Please try again later or contact support.', 'system');
     } finally {
       setLoading(false);
     }
@@ -359,34 +758,47 @@ export function WaitlistApp() {
 
   const getLineColor = (type: TerminalLine['type']) => {
     switch (type) {
-      case 'user': return 'text-white';
-      case 'success': return 'text-green-400';
-      case 'error': return 'text-red-400';
-      case 'info': return 'text-cyan-400';
+      case 'user': return 'text-green-200 font-bold';
+      case 'success': return 'text-green-400 font-semibold';
+      case 'error': return 'text-red-400 font-semibold animate-pulse';
+      case 'info': return 'text-green-300 font-semibold';
       default: return 'text-green-300';
     }
   };
 
   return (
-    <div className="h-full flex flex-col bg-black text-green-300 font-mono">
-      {/* Header */}
-      <div className="bg-gray-800 text-white p-2 flex items-center gap-2 border-b border-gray-600">
-        <Terminal size={16} />
-        <span className="text-sm font-bold">WAITLIST.SH - MS-DOS Terminal</span>
+    <div className="h-full flex flex-col bg-black text-green-300 font-mono" style={{ fontFamily: 'Courier New, monospace' }}>
+      {/* MS-DOS Header */}
+      <div className="bg-black text-green-300 p-2 flex items-center gap-2 border-b border-green-600">
+        <Terminal size={16} className="text-green-400" />
+        <span className="text-sm font-bold tracking-wider">MS-DOS 6.22 - WAITLIST.SH</span>
+        <div className="ml-auto flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-xs">ONLINE</span>
+        </div>
       </div>
 
       {/* Terminal Content */}
       <div 
         ref={terminalRef}
-        className="flex-1 overflow-auto p-4 space-y-1 text-sm"
+        className="flex-1 overflow-auto p-4 space-y-0 text-sm leading-tight bg-black"
+        style={{ 
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#22c55e #000000'
+        }}
       >
         <AnimatePresence>
           {lines.map((line) => (
             <motion.div
               key={line.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className={`${getLineColor(line.type)} whitespace-pre-wrap`}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.1 }}
+              className={`${getLineColor(line.type)} whitespace-pre-wrap leading-tight`}
+              style={{ 
+                textShadow: '0 0 5px currentColor',
+                letterSpacing: '0.5px'
+              }}
             >
               {line.text}
             </motion.div>
@@ -395,42 +807,71 @@ export function WaitlistApp() {
         
         {/* Loading indicator */}
         {loading && (
-          <div className="text-yellow-400 animate-pulse">
-            Procesando...
-          </div>
+          <motion.div 
+            className="text-green-400 font-bold animate-pulse flex items-center gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <div className="flex gap-1">
+              <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce"></div>
+              <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+              <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            </div>
+            PROCESSING...
+          </motion.div>
         )}
       </div>
 
-      {/* Input */}
-      <div className="border-t border-gray-600 p-4">
+      {/* Command Input */}
+      <div className="border-t border-green-600 p-4 bg-black">
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
-          <span className="text-green-300">C:\TIDELABS&gt;</span>
+          <span className="text-green-400 font-bold tracking-wider">C:\TIDELABS&gt;</span>
           <input
             ref={inputRef}
             type="text"
             value={currentInput}
             onChange={(e) => setCurrentInput(e.target.value)}
-            className="flex-1 bg-transparent text-green-300 outline-none font-mono"
+            className="flex-1 bg-transparent text-green-300 outline-none font-mono font-bold tracking-wide"
+            style={{ 
+              textShadow: '0 0 5px #22c55e',
+              caretColor: '#22c55e'
+            }}
             disabled={loading || currentStep === 'complete'}
             autoComplete="off"
+            placeholder={currentStep === 'complete' ? 'Registration complete' : 'Enter command...'}
           />
-          <div className="w-2 h-4 bg-green-300 animate-pulse" />
+          <div 
+            className="w-2 h-4 bg-green-400 animate-pulse"
+            style={{ 
+              boxShadow: '0 0 10px #22c55e'
+            }}
+          />
         </form>
       </div>
 
-      {/* Status Bar */}
-      <div className="bg-gray-800 text-white p-2 text-xs flex justify-between items-center border-t border-gray-600">
-        <div className="flex items-center gap-4">
-          <span>TIDElabs OS v1.0</span>
+      {/* MS-DOS Status Bar */}
+      <div className="bg-black text-green-300 p-2 text-xs flex justify-between items-center border-t border-green-600">
+        <div className="flex items-center gap-4 font-bold">
+          <span className="tracking-wider">TIDElabs OS v1.0</span>
           {walletAddress && (
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 text-green-400">
               <User size={12} />
-              {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+              <span className="font-mono">{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</span>
             </span>
           )}
+          <span className="text-green-500">
+            Step: {currentStep === 'welcome' ? 'READY' : 
+                   currentStep === 'username' ? '1/5' :
+                   currentStep === 'email' ? '2/5' :
+                   currentStep === 'role' ? '3/5' :
+                   currentStep === 'role_details' ? '3/5' :
+                   currentStep === 'requirements' ? '4/5' :
+                   currentStep === 'referral' ? '5/5' : 'COMPLETE'}
+          </span>
         </div>
-        <div className="flex items-center gap-2">
-          <span>{new Date().toLocaleTimeString()}</span>
+        <div className="flex items-center gap-2 font-bold">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="tracking-wider">{new Date().toLocaleTimeString()}</span>
         </div>
       </div>
     </div>

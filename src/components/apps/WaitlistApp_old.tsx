@@ -26,7 +26,7 @@ export function WaitlistApp() {
     // Simulación de envío
     setTimeout(() => {
       setStatus("success");
-      setMessage("¡Te has unido al Galeón! Revisa tu email.");
+      setMessage("¡Te has unido al The Aetherius! Revisa tu email.");
       setEmail("");
     }, 1500);
   };

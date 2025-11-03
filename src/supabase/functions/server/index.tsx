@@ -1,5 +1,5 @@
 /**
- * TIDElabs Backend - El Corazón del Galeón
+ * TIDElabs Backend - El Corazón del The Aetherius
  * Backend unificado para autenticación SIWE, crowdfunding, productos y chat
  */
 
@@ -756,6 +756,6 @@ app.get("/make-server-7bf7363c/tunova/leaderboard", async (c) => {
   }
 });
 
-console.log("TIDElabs Backend initialized. El Galeón está en línea.");
+console.log("TIDElabs Backend initialized. El The Aetherius está en línea.");
 
 Deno.serve(app.fetch);

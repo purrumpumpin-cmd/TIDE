@@ -1,5 +1,5 @@
 /**
- * TIDElabs - El Galeón Digital
+ * TIDElabs - El The Aetherius Digital
  * Sistema Operativo del Santuario - VERSIÓN MEJORADA
  */
 
@@ -497,7 +497,7 @@ export function TIDELabsDesktop({
                 <Sparkles size={20} />
                 <div>
                   <div className="text-lg">TIDElabs</div>
-                  <div className="text-xs opacity-80">El Galeón Digital v1.0</div>
+                  <div className="text-xs opacity-80">El The Aetherius Digital v1.0</div>
                 </div>
               </div>
               <div className="p-2 max-h-[60vh] overflow-y-auto">
@@ -603,7 +603,7 @@ export function TIDELabsDesktop({
                   Has desbloqueado el código pirata
                 </p>
                 <p className="text-yellow-300 text-sm mt-2">
-                  Eres un verdadero navegante del Galeón
+                  Eres un verdadero navegante del The Aetherius
                 </p>
               </div>
             </div>

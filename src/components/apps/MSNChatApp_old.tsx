@@ -84,7 +84,7 @@ const CONTACTS: Contact[] = [
 export function MSNChatApp() {
   const [contacts] = useState<Contact[]>(CONTACTS);
   const [myStatus, setMyStatus] = useState<"online" | "away" | "busy">("online");
-  const [myPersonalMessage, setMyPersonalMessage] = useState("¡Navegando el Galeón Digital!");
+  const [myPersonalMessage, setMyPersonalMessage] = useState("¡Navegando el The Aetherius Digital!");
   const [openChats, setOpenChats] = useState<ChatWindow[]>([]);
   const [messages, setMessages] = useState<Record<string, Message[]>>({});
   const [inputTexts, setInputTexts] = useState<Record<string, string>>({});

@@ -207,7 +207,7 @@ export function WaitlistApp() {
     setFormData(prev => ({ ...prev, email }));
     addLine(`Email registrado: ${email}`, 'success');
     addLine('', 'system');
-    addLine('Paso 3/4: Rol en el Galeón', 'info');
+    addLine('Paso 3/4: Rol en el The Aetherius', 'info');
     addLine('Selecciona tu rol preferido escribiendo el número:', 'system');
     
     NAKAMA_ROLES.forEach((role, index) => {

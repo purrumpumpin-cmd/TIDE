@@ -1,6 +1,6 @@
 /**
  * TIDElabs - CROWDFUND.WEB3
- * El Corazón Financiero del Galeón
+ * El Corazón Financiero del The Aetherius
  */
 
 import { useState, useEffect } from "react";
@@ -99,7 +99,7 @@ export function CrowdfundApp({ sessionToken, userTier }: CrowdfundAppProps) {
       {/* Header */}
       <div className="bg-[var(--color-win95-titlebar)] text-white p-4 win95-bevel-out">
         <h2 className="font-brutalist tracking-wider">CROWDFUND.WEB3</h2>
-        <p className="text-xs mt-1">Únete a la Tripulación del Galeón</p>
+        <p className="text-xs mt-1">Únete a la Tripulación del The Aetherius</p>
       </div>
 
       {/* Progress Bar */}

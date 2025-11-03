@@ -226,7 +226,7 @@ export function WindowsStyleBootAnimation({ onComplete }: WindowsStyleBootAnimat
         transition={{ delay: 1, duration: 0.8 }}
       >
         <p className="text-[var(--color-raza-gray)] font-win95 text-sm text-center">
-          Iniciando el Galeón Digital...
+          Iniciando el The Aetherius Digital...
         </p>
         <div className="flex items-center justify-center gap-1 mt-2">
           <motion.span

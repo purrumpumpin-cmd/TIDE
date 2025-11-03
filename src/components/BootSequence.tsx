@@ -1,6 +1,6 @@
 /**
  * TIDElabs - Secuencia de Arranque Pirata
- * "Izar las velas del Galeón Digital"
+ * "Izar las velas del The Aetherius Digital"
  */
 
 import { useEffect, useState } from "react";
@@ -39,7 +39,7 @@ const BOOT_STAGES = [
     phase: "LOADING",
     messages: [
       "",
-      "🏴‍☠️ Izando las velas del Galeón Digital...",
+      "🏴‍☠️ Izando las velas del The Aetherius Digital...",
       "Loading RAZA.sys [Brutalismo Elegante]",
       "Loading AZAR.sys [Caos Generativo]",
       "Loading NAKAMA.chat [Sistema de Tripulación]",
@@ -52,7 +52,7 @@ const BOOT_STAGES = [
     phase: "FLAG",
     messages: [
       "",
-      "🏴‍☠️ Bandera del Galeón Digital izada...",
+      "🏴‍☠️ Bandera del The Aetherius Digital izada...",
       "Sovering Code Manifesto",
       "",
     ],
@@ -68,7 +68,7 @@ const BOOT_STAGES = [
       "  'El código es ley, la libertad es eterna'",
       "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
       "",
-      "Bienvenido al Galeón Digital, Nakama...",
+      "Bienvenido al The Aetherius Digital, Nakama...",
     ],
     delay: 400,
   },
@@ -164,7 +164,7 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
             >
               <img 
                 src={SHARK_FLAG_URL} 
-                alt="Bandera del Galeón Digital" 
+                alt="Bandera del The Aetherius Digital" 
                 className="w-48 h-48 filter invert sepia hue-rotate-100 saturate-200 contrast-200" 
               />
             </motion.div>

@@ -12,7 +12,7 @@ export function TideLabsCoreApp() {
       {/* Header */}
       <div className="bg-[var(--color-raza-accent)] text-black p-4 win95-bevel-out sticky top-0 z-10">
         <h2 className="font-brutalist tracking-wider text-xl">TIDELABS.CORE</h2>
-        <p className="text-xs mt-1">El Manifiesto del Galeón</p>
+        <p className="text-xs mt-1">El Manifiesto del The Aetherius</p>
       </div>
 
       {/* Content */}

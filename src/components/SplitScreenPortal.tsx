@@ -80,7 +80,7 @@ export function SplitScreenPortal({
       {/* Línea divisoria central */}
       <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-[var(--color-raza-accent)] transform -translate-x-1/2" />
 
-      {/* Logo central flotante - enlaza al Galeón */}
+      {/* Logo central flotante - enlaza al The Aetherius */}
       <motion.div
         className="absolute top-8 left-1/2 transform -translate-x-1/2 cursor-pointer z-10"
         initial={{ y: -50, opacity: 0 }}

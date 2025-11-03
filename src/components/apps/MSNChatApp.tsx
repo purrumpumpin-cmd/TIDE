@@ -29,7 +29,7 @@ interface ChatMessage {
 }
 
 const PIRATE_STATUSES = [
-  { id: 'En el Galeón', label: 'En el Galeón', icon: <Ship size={16} />, color: 'text-green-500' },
+  { id: 'En el The Aetherius', label: 'En el The Aetherius', icon: <Ship size={16} />, color: 'text-green-500' },
   { id: 'Izando la Bandera', label: 'Izando la Bandera', icon: <Crown size={16} />, color: 'text-yellow-500' },
   { id: 'Navegando', label: 'Navegando', icon: <Compass size={16} />, color: 'text-blue-500' },
   { id: 'Buscando Tesoro', label: 'Buscando Tesoro', icon: <Skull size={16} />, color: 'text-purple-500' },
@@ -41,7 +41,7 @@ export function MSNChatApp() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [nakamas, setNakamas] = useState<NakamaUser[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
-  const [currentStatus, setCurrentStatus] = useState('En el Galeón');
+  const [currentStatus, setCurrentStatus] = useState('En el The Aetherius');
   const [statusMessage, setStatusMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [walletAddress] = useState<string | null>(localStorage.getItem('tidelabs_wallet'));

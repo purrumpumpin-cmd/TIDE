@@ -1,6 +1,6 @@
 /**
  * TIDElabs - HELP.TXT
- * Guía de uso del Galeón Digital
+ * Guía de uso del The Aetherius Digital
  */
 
 import { HelpCircle, Zap, ShoppingBag, MessageSquare, Wallet } from "lucide-react";
@@ -12,7 +12,7 @@ export function HelpApp() {
       {/* Header */}
       <div className="bg-[var(--color-win95-titlebar)] text-white p-4 win95-bevel-out sticky top-0 z-10">
         <h2 className="font-brutalist tracking-wider">HELP.TXT</h2>
-        <p className="text-xs mt-1">Guía del Galeón Digital</p>
+        <p className="text-xs mt-1">Guía del The Aetherius Digital</p>
       </div>
 
       <div className="p-6 space-y-6">

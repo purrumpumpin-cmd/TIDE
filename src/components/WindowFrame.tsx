@@ -1,6 +1,6 @@
 /**
  * TIDElabs - El Marco del Recuerdo
- * Contenedor Win95 para las aplicaciones del Galeón
+ * Contenedor Win95 para las aplicaciones del The Aetherius
  */
 
 import { X, Minimize2, Square } from "lucide-react";

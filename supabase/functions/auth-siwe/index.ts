@@ -72,7 +72,7 @@ serve(async (req) => {
         .insert({
           wallet_address: walletAddress.toLowerCase(),
           username: user.username,
-          status: 'En el Galeón',
+          status: 'En el The Aetherius',
           is_online: true,
         })
     } else {

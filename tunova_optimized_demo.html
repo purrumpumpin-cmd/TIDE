@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TUNOVA.IO - Walkmans Web3</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1A0033 50%, #000000 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 2rem 3rem;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(57, 255, 20, 0.3);
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      color: white;
+      text-shadow: 0 0 20px #39FF14, 0 0 40px #39FF14;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.05em;
+    }
+
+    .collections {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem 3rem;
+      background: rgba(0, 0, 0, 0.3);
+      flex-wrap: wrap;
+    }
+
+    .collection-btn {
+      padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .collection-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #39FF14;
+      box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .collection-btn.vahoman {
+      background: linear-gradient(135deg, #FFB900 0%, #FF8C00 100%);
+      color: black;
+    }
+
+    .collection-btn.nakamas {
+      background: linear-gradient(135deg, #9D00FF 0%, #FF00FF 100%);
+      color: white;
+    }
+
+    .collection-btn.raza {
+      background: linear-gradient(135deg, #FFFFFF 0%, #E5E5E5 100%);
+      color: black;
+    }
+
+    .collection-btn.azar {
+      background: linear-gradient(135deg, #000000 0%, #1A0033 50%, #00FFFF 100%);
+      color: white;
+    }
+
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 3rem;
+      padding: 3rem;
+      max-width: 1800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .walkman-card {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 24px;
+      padding: 2rem;
+      border: 2px solid rgba(57, 255, 20, 0.2);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .walkman-card:hover {
+      border-color: #39FF14;
+      box-shadow: 0 10px 40px rgba(57, 255, 20, 0.3);
+      transform: translateY(-5px);
+    }
+
+    .walkman-image-container {
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 3/4;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .walkman-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .walkman-info {
+      text-align: center;
+      width: 100%;
+    }
+
+    .walkman-name {
+      font-size: 1.75rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .walkman-name.vahoman {
+      color: #FFB900;
+      text-shadow: 0 0 20px #FFB900;
+    }
+
+    .walkman-name.nakamas {
+      color: #FF00FF;
+      text-shadow: 0 0 20px #FF00FF;
+    }
+
+    .walkman-name.raza {
+      color: #FFFFFF;
+      text-shadow: 0 0 20px #FFFFFF;
+    }
+
+    .walkman-name.azar {
+      color: #00FFFF;
+      text-shadow: 0 0 20px #00FFFF;
+    }
+
+    .walkman-desc {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .walkman-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .feature-icon {
+      font-size: 1.25rem;
+    }
+
+    .nft-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(57, 255, 20, 0.2);
+      border: 1px solid #39FF14;
+      border-radius: 8px;
+      color: #39FF14;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .footer {
+      padding: 2rem 3rem;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-top: 2px solid rgba(57, 255, 20, 0.3);
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.75rem;
+      }
+
+      .main {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.5rem;
+      }
+
+      .collections {
+        padding: 1.5rem;
+      }
+
+      .collection-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>TUNOVA.IO</h1>
+    <p>Web3 Music Platform - Walkmans Personalizados Retro</p>
+  </header>
+
+  <nav class="collections">
+    <button class="collection-btn vahoman">VAH0M4N</button>
+    <button class="collection-btn nakamas">NAKAMAS</button>
+    <button class="collection-btn raza">RAZA</button>
+    <button class="collection-btn azar">AZAR</button>
+  </nav>
+
+  <main class="main">
+    <!-- VAH0M4N -->
+    <div class="walkman-card">
+      <div class="walkman-image-container">
+        <img src="assets/walkman_vahoman.png" alt="VAH0M4N Walkman" class="walkman-image">
+      </div>
+      <div class="walkman-info">
+        <h2 class="walkman-name vahoman">VAH0M4N</h2>
+        <p class="walkman-desc">
+          Rey de los Emprendedores - Edición 8 Idiomas<br>
+          Walkman dorado premium con símbolos crypto
+        </p>
+        <div class="walkman-features">
+          <div class="feature">
+            <span class="feature-icon">🎵</span>
+            <span>8 tracks en diferentes idiomas</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">₿</span>
+            <span>Integración Bitcoin, Ethereum, Solana</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🔥</span>
+            <span>Acabado metálico dorado/naranja</span>
+          </div>
+          <div class="feature">
+            <span class="nft-badge">NFT Required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAKAMAS -->
+    <div class="walkman-card">
+      <div class="walkman-image-container">
+        <img src="assets/walkman_nakamas.png" alt="NAKAMAS Walkman" class="walkman-image">
+      </div>
+      <div class="walkman-info">
+        <h2 class="walkman-name nakamas">NAKAMAS</h2>
+        <p class="walkman-desc">
+          Compilado del Ecosistema - 10 Artistas<br>
+          Walkman cyberpunk con neón púrpura/rosa
+        </p>
+        <div class="walkman-features">
+          <div class="feature">
+            <span class="feature-icon">🎵</span>
+            <span>10 tracks de artistas del ecosistema</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🏴‍☠️</span>
+            <span>Bandera pirata holográfica</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">💎</span>
+            <span>Badges NFT integrados</span>
+          </div>
+          <div class="feature">
+            <span class="nft-badge">NFT Required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAZA -->
+    <div class="walkman-card">
+      <div class="walkman-image-container">
+        <img src="assets/walkman_raza.png" alt="RAZA Walkman" class="walkman-image">
+      </div>
+      <div class="walkman-info">
+        <h2 class="walkman-name raza">RAZA</h2>
+        <p class="walkman-desc">
+          RazAzaR: Brutalismo Elegante - 4 Tracks<br>
+          Walkman minimalista blanco con formas geométricas
+        </p>
+        <div class="walkman-features">
+          <div class="feature">
+            <span class="feature-icon">🎵</span>
+            <span>4 tracks de música minimalista</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">⚪</span>
+            <span>Diseño brutalista elegante</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">📐</span>
+            <span>Formas geométricas flotantes</span>
+          </div>
+          <div class="feature">
+            <span class="nft-badge">NFT Required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AZAR -->
+    <div class="walkman-card">
+      <div class="walkman-image-container">
+        <img src="assets/walkman_azar.png" alt="AZAR Walkman" class="walkman-image">
+      </div>
+      <div class="walkman-info">
+        <h2 class="walkman-name azar">AZAR</h2>
+        <p class="walkman-desc">
+          RazAzaR: Caos Generativo - 4 Tracks<br>
+          Walkman negro con efectos glitch púrpura/cyan
+        </p>
+        <div class="walkman-features">
+          <div class="feature">
+            <span class="feature-icon">🎵</span>
+            <span>4 tracks de música generativa</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">⚫</span>
+            <span>Efectos glitch holográficos</span>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🌀</span>
+            <span>Fragmentos NFT flotantes</span>
+          </div>
+          <div class="feature">
+            <span class="nft-badge">NFT Required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 TUNOVA.IO - Web3 Music Platform | Walkmans Retro Personalizados</p>
+  </footer>
+</body>
+</html>

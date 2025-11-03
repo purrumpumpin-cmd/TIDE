@@ -1,0 +1,908 @@
+/**
+ * TUNOVA.IO - Estilos Base
+ * Vista Principal con Walkman Fotorrealista y Estantería de Casetes
+ */
+
+/* ═══════════════════════════════════════════════════════════
+   VARIABLES CSS - PALETA DE COLORES
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Vah0m4n (Dorado) */
+  --tunova-vahoman-primary: #FFB900;
+  --tunova-vahoman-secondary: #FF8C00;
+  --tunova-vahoman-gradient: linear-gradient(135deg, #FFB900 0%, #FF8C00 100%);
+  
+  /* NAKAMAS (Púrpura Neón) */
+  --tunova-nakamas-primary: #FF00FF;
+  --tunova-nakamas-secondary: #9D00FF;
+  --tunova-nakamas-gradient: linear-gradient(135deg, #9D00FF 0%, #FF00FF 100%);
+  
+  /* RazAzaR RAZA (Minimalista) */
+  --tunova-raza-primary: #FFFFFF;
+  --tunova-raza-secondary: #E5E5E5;
+  --tunova-raza-gradient: linear-gradient(135deg, #FFFFFF 0%, #E5E5E5 100%);
+  
+  /* RazAzaR AZAR (Glitch) */
+  --tunova-azar-primary: #000000;
+  --tunova-azar-secondary: #1A0033;
+  --tunova-azar-gradient: linear-gradient(135deg, #000000 0%, #1A0033 50%, #000000 100%);
+  
+  /* Acentos */
+  --tunova-accent-neon-green: #39FF14;
+  --tunova-accent-cyan: #00FFFF;
+  
+  /* Fondo y superficies */
+  --tunova-bg-dark: #0A0A0A;
+  --tunova-bg-gradient: linear-gradient(135deg, #000000 0%, #1A0033 50%, #000000 100%);
+  --tunova-surface: rgba(255, 255, 255, 0.05);
+  
+  /* Walkman */
+  --tunova-walkman-metal: #C0C0C0;
+  --tunova-walkman-dark: #2A2A2A;
+  --tunova-walkman-lcd: #1A3A1A;
+  
+  /* Madera de estantería */
+  --tunova-wood-dark: #3E2723;
+  --tunova-wood-medium: #5D4037;
+  --tunova-wood-light: #6D4C41;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT PRINCIPAL
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-container {
+  width: 100%;
+  height: 100vh;
+  background: var(--tunova-bg-gradient);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: white;
+  position: relative;
+}
+
+/* Efecto de ruido de fondo */
+.tunova-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEADER - NAVEGACIÓN SUPERIOR
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-header {
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(57, 255, 20, 0.3);
+  z-index: 10;
+}
+
+.tunova-logo {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: white;
+  text-shadow: 0 0 20px var(--tunova-accent-neon-green),
+               0 0 40px var(--tunova-accent-neon-green);
+}
+
+.tunova-collection-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.tunova-collection-btn {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.tunova-collection-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--tunova-accent-neon-green);
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+  transform: translateY(-2px);
+}
+
+.tunova-collection-btn.active {
+  background: var(--tunova-accent-neon-green);
+  color: black;
+  border-color: var(--tunova-accent-neon-green);
+  box-shadow: 0 0 30px rgba(57, 255, 20, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTENIDO PRINCIPAL
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-main {
+  flex: 1;
+  display: flex;
+  gap: 3rem;
+  padding: 2rem 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ESTANTERÍA DE CASETES (IZQUIERDA)
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-shelf-container {
+  width: 320px;
+  background: linear-gradient(135deg, var(--tunova-wood-dark) 0%, var(--tunova-wood-medium) 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 
+    inset 0 2px 10px rgba(0, 0, 0, 0.5),
+    0 10px 40px rgba(0, 0, 0, 0.8);
+  border: 3px solid var(--tunova-wood-light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Textura de madera */
+.tunova-shelf-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.1) 4px
+    );
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.tunova-shelf-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.tunova-shelf-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--tunova-accent-neon-green);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px var(--tunova-accent-neon-green);
+}
+
+.tunova-shelf-count {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tunova-cassettes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Scrollbar personalizado */
+.tunova-cassettes-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tunova-cassettes-grid::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.tunova-cassettes-grid::-webkit-scrollbar-thumb {
+  background: var(--tunova-accent-neon-green);
+  border-radius: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CASETE INDIVIDUAL
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-cassette-card {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.tunova-cassette-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tunova-cassette-card:hover {
+  transform: translateY(-5px) scale(1.05);
+  border-color: var(--tunova-accent-neon-green);
+  box-shadow: 0 10px 30px rgba(57, 255, 20, 0.3);
+}
+
+.tunova-cassette-card:hover::before {
+  opacity: 1;
+}
+
+.tunova-cassette-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tunova-cassette-card.locked:hover {
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.tunova-cassette-artwork {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.tunova-cassette-info {
+  text-align: center;
+}
+
+.tunova-cassette-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: white;
+  line-height: 1.2;
+  min-height: 2.4em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tunova-cassette-desc {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.tunova-cassette-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.tunova-cassette-tracks {
+  color: var(--tunova-accent-cyan);
+}
+
+.tunova-cassette-badge {
+  background: var(--tunova-accent-neon-green);
+  color: black;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.6rem;
+}
+
+.tunova-nft-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WALKMAN PRINCIPAL (CENTRO)
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-walkman-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.tunova-walkman {
+  width: 450px;
+  background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    inset 0 2px 5px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+  border: 4px solid #707070;
+  position: relative;
+}
+
+/* Reflejo metálico */
+.tunova-walkman::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 30%;
+  height: 40%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.tunova-walkman-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.tunova-walkman-logo {
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 
+    0 0 20px var(--tunova-accent-neon-green),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+}
+
+.tunova-walkman-subtitle {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPARTIMENTO DEL CASETE
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-cassette-compartment {
+  height: 200px;
+  background: #1A1A1A;
+  border-radius: 16px;
+  border: 4px solid #505050;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    inset 0 4px 10px rgba(0, 0, 0, 0.8),
+    0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.tunova-cassette-window {
+  position: absolute;
+  inset: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #404040;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tunova-cassette-inserted {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.tunova-cassette-inserted-artwork {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
+}
+
+.tunova-cassette-inserted-name {
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+/* Carretes girando */
+.tunova-cassette-reels {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4rem;
+}
+
+.tunova-reel {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.8);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  position: relative;
+}
+
+.tunova-reel::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 50%;
+}
+
+.tunova-reel.spinning {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.tunova-empty-message {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DISPLAY LCD
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-lcd-display {
+  background: var(--tunova-walkman-lcd);
+  border: 2px solid #0A2A0A;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-family: 'Courier New', monospace;
+  color: #39FF14;
+  box-shadow: 
+    inset 0 2px 5px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(57, 255, 20, 0.2);
+  min-height: 100px;
+}
+
+.tunova-lcd-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
+}
+
+.tunova-lcd-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 5px #39FF14;
+}
+
+.tunova-lcd-artist {
+  font-size: 0.85rem;
+  color: #7FFF7F;
+  margin-bottom: 0.5rem;
+}
+
+.tunova-lcd-language {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.tunova-lcd-rewards {
+  font-size: 0.75rem;
+  color: var(--tunova-accent-cyan);
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tunova-lcd-empty {
+  text-align: center;
+  font-size: 1rem;
+  opacity: 0.5;
+  padding: 2rem 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTROLES DEL WALKMAN
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tunova-controls-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tunova-control-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #404040 0%, #202020 100%);
+  border: 3px solid #606060;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.tunova-control-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #505050 0%, #303030 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.tunova-control-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.tunova-control-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.tunova-control-btn.play-pause {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--tunova-accent-neon-green) 0%, #2ACC00 100%);
+  border-color: #4FFF4F;
+  color: black;
+}
+
+.tunova-control-btn.play-pause:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4FFF4F 0%, var(--tunova-accent-neon-green) 100%);
+  box-shadow: 
+    0 8px 16px rgba(57, 255, 20, 0.4),
+    0 0 30px rgba(57, 255, 20, 0.3);
+}
+
+.tunova-control-btn.eject {
+  background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+  border-color: #FF6666;
+}
+
+.tunova-control-btn.eject:hover:not(:disabled) {
+  background: linear-gradient(135deg, #FF6666 0%, #FF4444 100%);
+  box-shadow: 
+    0 6px 12px rgba(255, 68, 68, 0.4),
+    0 0 20px rgba(255, 68, 68, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTROL DE VOLUMEN
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-volume-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.tunova-volume-icon {
+  color: white;
+  flex-shrink: 0;
+}
+
+.tunova-volume-slider {
+  flex: 1;
+  height: 6px;
+  background: #404040;
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.tunova-volume-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--tunova-accent-neon-green) 0%, #7FFF7F 100%);
+  border-radius: 3px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+}
+
+.tunova-volume-thumb {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  cursor: grab;
+}
+
+.tunova-volume-thumb:active {
+  cursor: grabbing;
+}
+
+.tunova-volume-value {
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 35px;
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VISUALIZADOR DE AUDIO (INFERIOR)
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-footer {
+  padding: 1.5rem 3rem;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  border-top: 2px solid rgba(57, 255, 20, 0.3);
+  z-index: 10;
+}
+
+.tunova-visualizer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 60px;
+}
+
+.tunova-visualizer-bar {
+  width: 4px;
+  background: linear-gradient(to top, var(--tunova-accent-neon-green) 0%, #7FFF7F 100%);
+  border-radius: 2px 2px 0 0;
+  transition: height 0.1s ease;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+}
+
+.tunova-visualizer-bar.active {
+  animation: pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PANEL DE RECOMPENSAS
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-rewards-panel {
+  position: absolute;
+  bottom: 2rem;
+  left: 3rem;
+  background: linear-gradient(135deg, rgba(0, 100, 0, 0.8) 0%, rgba(0, 150, 150, 0.8) 100%);
+  border: 2px solid var(--tunova-accent-neon-green);
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-width: 250px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.tunova-rewards-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tunova-rewards-icon {
+  color: var(--tunova-accent-neon-green);
+}
+
+.tunova-rewards-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tunova-rewards-points {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--tunova-accent-neon-green);
+  text-shadow: 0 0 20px var(--tunova-accent-neon-green);
+  margin-bottom: 0.5rem;
+}
+
+.tunova-rewards-desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NOTIFICACIÓN DE RECOMPENSA
+   ═══════════════════════════════════════════════════════════ */
+
+.tunova-reward-notification {
+  position: absolute;
+  top: 2rem;
+  right: 3rem;
+  background: linear-gradient(135deg, #39FF14 0%, #00FFFF 100%);
+  color: black;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(57, 255, 20, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: slideInRight 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+  z-index: 100;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(400px);
+  }
+}
+
+.tunova-reward-notification-icon {
+  font-size: 2rem;
+}
+
+.tunova-reward-notification-text {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.tunova-reward-notification-subtext {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1366px) {
+  .tunova-walkman {
+    width: 400px;
+    padding: 2rem;
+  }
+  
+  .tunova-shelf-container {
+    width: 280px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tunova-main {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .tunova-shelf-container {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .tunova-cassettes-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .tunova-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .tunova-collection-nav {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .tunova-main {
+    padding: 1rem;
+  }
+  
+  .tunova-cassettes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .tunova-walkman {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .tunova-rewards-panel {
+    position: static;
+    margin-top: 1rem;
+  }
+}
